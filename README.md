@@ -1,4 +1,4 @@
-# Intervo — AI Interview Coach
+# InterVo — AI Interview Coach
 
 An AI-powered placement preparation platform designed to help students become interview-ready through personalized learning, mock interviews, coding practice, and performance analytics.
 
