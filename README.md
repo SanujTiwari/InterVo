@@ -56,6 +56,3 @@ intervo/
 └── README.md
 ```
 
-## License
-
-MIT
