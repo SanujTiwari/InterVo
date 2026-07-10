@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
+import api from '../api/axios';
 
 const AuthContext = createContext(null);
 
@@ -74,6 +75,10 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    const refreshToken = localStorage.getItem('intervo_refresh_token');
+    if (refreshToken) {
+      api.post('/auth/logout', { refreshToken }).catch(() => {});
+    }
     localStorage.removeItem('intervo_token');
     localStorage.removeItem('intervo_refresh_token');
     localStorage.removeItem('intervo_user');

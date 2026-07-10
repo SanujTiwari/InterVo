@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import healthRouter from './health.js';
+import authRouter from './auth.js';
 
 const router = Router();
 
 // Mount route modules
 router.use('/health', healthRouter);
-
-// Future routes will be added here:
-// router.use('/auth', authRouter);
+router.use('/auth', authRouter);
 // router.use('/users', userRouter);
 // router.use('/resume', resumeRouter);
 // router.use('/roadmap', roadmapRouter);
