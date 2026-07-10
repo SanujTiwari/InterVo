@@ -141,8 +141,8 @@ export default function LandingPage() {
       <section className="relative min-h-screen flex items-center justify-center pt-20">
         {/* Background effects */}
         <div className="absolute inset-0 bg-hero-pattern" />
-        <div className="bg-orb w-[600px] h-[600px] bg-blue-600 top-1/4 -left-32" />
-        <div className="bg-orb w-[500px] h-[500px] bg-purple-600 bottom-1/4 -right-32" />
+        <div className="bg-orb w-[600px] h-[600px] bg-accent-blue top-1/4 -left-32" />
+        <div className="bg-orb w-[500px] h-[500px] bg-accent-purple bottom-1/4 -right-32" />
         <div className="absolute inset-0 bg-grid opacity-30" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -241,7 +241,7 @@ export default function LandingPage() {
 
       {/* ─── How It Works Section ────────────────────────────── */}
       <section id="how-it-works" className="py-24 px-6 relative">
-        <div className="bg-orb w-96 h-96 bg-purple-600 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <div className="bg-orb w-96 h-96 bg-accent-purple top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -373,7 +373,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="gradient-border p-10 sm:p-14 text-center relative overflow-hidden"
           >
-            <div className="bg-orb w-64 h-64 bg-blue-600 -top-32 -right-32 opacity-20" />
+            <div className="bg-orb w-64 h-64 bg-accent-blue -top-32 -right-32 opacity-20" />
             <div className="relative z-10">
               <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
                 Ready to start your journey?

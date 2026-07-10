@@ -20,7 +20,7 @@
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #181716;
+    background-color: #000000;
     color: #e3e2dd;
     min-height: 100vh;
     overflow-x: hidden;
@@ -38,16 +38,16 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #1c1b19;
+    background: #000000;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #35322f;
+    background: #222222;
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #494642;
+    background: #333333;
   }
 }
 
@@ -55,7 +55,7 @@
 @layer components {
   /* Glassmorphism Card */
   .glass {
-    background: rgba(28, 27, 25, 0.65);
+    background: rgba(15, 15, 15, 0.7);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -63,7 +63,7 @@
   }
 
   .glass-light {
-    background: rgba(28, 27, 25, 0.4);
+    background: rgba(15, 15, 15, 0.45);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.04);
@@ -106,7 +106,7 @@
   /* Gradient Border */
   .gradient-border {
     position: relative;
-    background: rgba(17, 25, 40, 0.8);
+    background: rgba(10, 10, 10, 0.9);
     border-radius: 16px;
   }
 
@@ -172,7 +172,7 @@
   .input-field {
     @apply w-full px-4 py-3 rounded-xl text-white placeholder-slate-500
            outline-none transition-all duration-300;
-    background: rgba(28, 27, 25, 0.6);
+    background: rgba(15, 15, 15, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
