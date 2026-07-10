@@ -162,10 +162,10 @@ export default function LandingPage() {
               <span className="text-xs font-medium text-blue-300">AI-Powered Interview Preparation</span>
             </motion.div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif text-white leading-[1.1] mb-6 italic">
               Ace your next
               <br />
-              <span className="gradient-text">tech interview</span>
+              <span className="gradient-text not-italic font-bold">tech interview</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -223,8 +223,8 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Everything you need to <span className="gradient-text">crack the interview</span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+              Everything you need to <span className="gradient-text font-sans font-bold">crack the interview</span>
             </h2>
             <p className="text-slate-400 max-w-xl mx-auto">
               A complete toolkit designed to prepare you for every aspect of the interview process.
@@ -249,8 +249,8 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              How <span className="gradient-text">Intervo</span> works
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+              How <span className="gradient-text font-sans font-bold">Intervo</span> works
             </h2>
             <p className="text-slate-400 max-w-xl mx-auto">
               Four simple steps to go from preparation to placement.
@@ -294,8 +294,8 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Loved by <span className="gradient-text">thousands</span> of students
+            <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
+              Loved by <span className="gradient-text font-sans font-bold">thousands</span> of students
             </h2>
             <p className="text-slate-400">
               See what our users say about their interview preparation journey.
@@ -375,7 +375,7 @@ export default function LandingPage() {
           >
             <div className="bg-orb w-64 h-64 bg-blue-600 -top-32 -right-32 opacity-20" />
             <div className="relative z-10">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-serif text-white mb-4">
                 Ready to start your journey?
               </h2>
               <p className="text-slate-400 mb-8 max-w-lg mx-auto">
