@@ -74,8 +74,8 @@ export default function CodingPracticePage() {
 
   const currentStreak = profile?.current_streak ?? 0;
   const dbProblemsSolved = profile?.problems_solved ?? 0;
-  const acceptanceRate = profile?.acceptance_rate || 68; // fallback to 68% if 0
-  const avgSolveTime = profile?.avg_solve_time || 18; // fallback to 18 min if 0
+  const acceptanceRate = profile?.acceptance_rate ?? 0;
+  const avgSolveTime = profile?.avg_solve_time ?? 0;
 
   return (
     <div className="space-y-8">
@@ -99,17 +99,15 @@ export default function CodingPracticePage() {
           icon={TrendingUp}
           label="Acceptance Rate"
           value={`${acceptanceRate}%`}
-          change="+4% this week"
-          changeType="positive"
-          iconColor="text-blue-400"
-          iconBg="bg-blue-500/10"
+          iconColor="text-[#d4684b]"
+          iconBg="bg-[#d4684b]/10"
         />
         <StatCard
           icon={Clock}
           label="Avg. Solve Time"
           value={`${avgSolveTime} min`}
-          iconColor="text-purple-400"
-          iconBg="bg-purple-500/10"
+          iconColor="text-[#e88d72]"
+          iconBg="bg-[#e88d72]/10"
         />
         <StatCard
           icon={BarChart3}
@@ -164,7 +162,7 @@ export default function CodingPracticePage() {
               onClick={() => setSelectedTopic(topic)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 selectedTopic === topic
-                  ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
+                  ? 'bg-[#d4684b]/15 text-[#d4684b] border border-[#d4684b]/30'
                   : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
               }`}
             >
@@ -187,7 +185,7 @@ export default function CodingPracticePage() {
               onClick={() => setSelectedProblem(problem)}
               className={`w-full glass p-4 flex items-center gap-4 text-left transition-all duration-200 ${
                 selectedProblem?.id === problem.id
-                  ? 'border-blue-500/30 bg-blue-500/5'
+                  ? 'border-[#d4684b]/30 bg-[#d4684b]/5'
                   : 'hover:border-white/10'
               }`}
             >
@@ -252,8 +250,8 @@ export default function CodingPracticePage() {
 
               <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
                 <p>
-                  Given an array of integers <code className="px-1.5 py-0.5 rounded bg-white/5 text-blue-400 text-xs">nums</code> and 
-                  an integer <code className="px-1.5 py-0.5 rounded bg-white/5 text-blue-400 text-xs">target</code>, return 
+                  Given an array of integers <code className="px-1.5 py-0.5 rounded bg-white/5 text-[#d4684b] text-xs">nums</code> and 
+                  an integer <code className="px-1.5 py-0.5 rounded bg-white/5 text-[#d4684b] text-xs">target</code>, return 
                   indices of the two numbers such that they add up to target.
                 </p>
                 <p>

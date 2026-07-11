@@ -57,44 +57,7 @@ const interviewTypes = [
 
 const difficulties = ['Easy', 'Medium', 'Hard'];
 
-const pastInterviews = [
-  {
-    id: 1,
-    type: 'Technical',
-    topic: 'React & State Management',
-    score: 85,
-    date: 'Jun 28, 2026',
-    duration: '28 min',
-    difficulty: 'Medium',
-  },
-  {
-    id: 2,
-    type: 'Behavioral',
-    topic: 'Leadership & Teamwork',
-    score: 92,
-    date: 'Jun 26, 2026',
-    duration: '22 min',
-    difficulty: 'Easy',
-  },
-  {
-    id: 3,
-    type: 'System Design',
-    topic: 'Design a URL Shortener',
-    score: 68,
-    date: 'Jun 24, 2026',
-    duration: '42 min',
-    difficulty: 'Hard',
-  },
-  {
-    id: 4,
-    type: 'Technical',
-    topic: 'Binary Trees & Graphs',
-    score: 78,
-    date: 'Jun 22, 2026',
-    duration: '35 min',
-    difficulty: 'Medium',
-  },
-];
+const pastInterviews = [];
 
 const mockQuestions = [
   "Tell me about a complex technical problem you solved recently. Walk me through your approach.",
@@ -185,7 +148,7 @@ export default function MockInterviewPage() {
                     onClick={() => setSelectedType(type.id)}
                     className={`glass p-5 text-left transition-all duration-200 ${
                       selectedType === type.id
-                        ? 'border-blue-500/30 bg-blue-500/5 shadow-glow-blue'
+                        ? 'border-[#d4684b]/30 bg-[#d4684b]/5 shadow-glow-blue'
                         : 'hover:border-white/10'
                     }`}
                   >
@@ -204,7 +167,7 @@ export default function MockInterviewPage() {
                         animate={{ scale: 1 }}
                         className="absolute top-3 right-3"
                       >
-                        <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                        <CheckCircle2 className="w-5 h-5 text-[#d4684b]" />
                       </motion.div>
                     )}
                   </motion.button>
@@ -251,7 +214,14 @@ export default function MockInterviewPage() {
             {/* Past Interviews */}
             <div>
               <h2 className="text-lg font-semibold text-white mb-4">Interview History</h2>
-              <div className="space-y-3">
+              {pastInterviews.length === 0 ? (
+                <div className="glass p-8 text-center">
+                  <Mic className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <p className="text-sm text-slate-500 mb-1">No interviews completed yet</p>
+                  <p className="text-xs text-slate-600">Start an interview above to build your history.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
                 {pastInterviews.map((interview) => (
                   <motion.div
                     key={interview.id}
@@ -295,6 +265,7 @@ export default function MockInterviewPage() {
                   </motion.div>
                 ))}
               </div>
+              )}
             </div>
           </motion.div>
         ) : (
@@ -311,7 +282,7 @@ export default function MockInterviewPage() {
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
                 <span className="text-sm font-medium text-white">Live Interview</span>
-                <Badge color="blue" size="sm">
+                <Badge color="yellow" size="sm">
                   {interviewTypes.find((t) => t.id === selectedType)?.title}
                 </Badge>
               </div>
@@ -334,7 +305,7 @@ export default function MockInterviewPage() {
             {/* Question Display */}
             <Card hover={false} className="relative">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-medium text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full">
+                <span className="text-xs font-medium text-[#d4684b] bg-[#d4684b]/10 px-2.5 py-1 rounded-full">
                   Question {currentQuestion + 1} of {mockQuestions.length}
                 </span>
               </div>
@@ -355,8 +326,8 @@ export default function MockInterviewPage() {
             {/* AI Feedback Indicators */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Clarity', value: 72, color: 'from-blue-500 to-cyan-500' },
-                { label: 'Depth', value: 65, color: 'from-purple-500 to-pink-500' },
+                { label: 'Clarity', value: 72, color: 'from-[#d4684b] to-[#e88d72]' },
+                { label: 'Depth', value: 65, color: 'from-[#e88d72] to-amber-500' },
                 { label: 'Relevance', value: 88, color: 'from-emerald-500 to-teal-500' },
               ].map((metric) => (
                 <div key={metric.label} className="glass-light p-3 text-center">

@@ -23,7 +23,7 @@ const quickActions = [
     title: 'Start Interview',
     description: 'Practice with AI interviewer',
     icon: Mic,
-    color: 'from-blue-600 to-blue-500',
+    color: 'from-[#d4684b] to-[#e88d72]',
     link: '/interviews',
   },
   {
@@ -37,7 +37,7 @@ const quickActions = [
     title: 'Analyze Resume',
     description: 'Get AI-powered feedback',
     icon: FileText,
-    color: 'from-purple-600 to-purple-500',
+    color: 'from-[#e88d72] to-[#d4684b]',
     link: '/resume',
   },
   {
@@ -71,7 +71,7 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         className="gradient-border p-6 sm:p-8 relative overflow-hidden"
       >
-        <div className="bg-orb w-64 h-64 bg-blue-600 -top-20 -right-20 opacity-20" />
+        <div className="bg-orb w-64 h-64 bg-[#d4684b] -top-20 -right-20 opacity-20" />
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
@@ -88,10 +88,10 @@ export default function DashboardPage() {
               <p className="text-lg font-bold text-amber-400">{currentStreak}</p>
               <p className="text-xs text-amber-400/70">Streak</p>
             </div>
-            <div className="text-center px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
-              <Zap className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-              <p className="text-lg font-bold text-blue-400">{xpPoints.toLocaleString()}</p>
-              <p className="text-xs text-blue-400/70">XP</p>
+            <div className="text-center px-4 py-2 rounded-xl bg-[#d4684b]/10 border border-[#d4684b]/20">
+              <Zap className="w-5 h-5 text-[#d4684b] mx-auto mb-1" />
+              <p className="text-lg font-bold text-[#d4684b]">{xpPoints.toLocaleString()}</p>
+              <p className="text-xs text-[#d4684b]/70">XP</p>
             </div>
           </div>
         </div>
@@ -103,17 +103,13 @@ export default function DashboardPage() {
           icon={Mic}
           label="Interviews Taken"
           value={String(interviewsTaken)}
-          change="+1 this week"
-          changeType="positive"
-          iconColor="text-blue-400"
-          iconBg="bg-blue-500/10"
+          iconColor="text-[#d4684b]"
+          iconBg="bg-[#d4684b]/10"
         />
         <StatCard
           icon={Code2}
           label="Problems Solved"
           value={String(problemsSolved)}
-          change="+2 this week"
-          changeType="positive"
           iconColor="text-emerald-400"
           iconBg="bg-emerald-500/10"
         />
@@ -121,10 +117,8 @@ export default function DashboardPage() {
           icon={Target}
           label="Avg. Score"
           value={`${avgScore}%`}
-          change="+3% vs last week"
-          changeType="positive"
-          iconColor="text-purple-400"
-          iconBg="bg-purple-500/10"
+          iconColor="text-[#e88d72]"
+          iconBg="bg-[#e88d72]/10"
         />
         <StatCard
           icon={TrendingUp}
@@ -159,12 +153,12 @@ export default function DashboardPage() {
                 whileHover={{ y: -4 }}
                 className="glass glass-hover p-5 group cursor-pointer h-full"
               >
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
                   <action.icon className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-sm font-semibold text-white mb-1">{action.title}</h3>
                 <p className="text-xs text-slate-500">{action.description}</p>
-                <ArrowRight className="w-4 h-4 text-slate-600 mt-3 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-4 h-4 text-slate-600 mt-3 group-hover:text-[#d4684b] group-hover:translate-x-1 transition-all" />
               </motion.div>
             </Link>
           ))}
@@ -183,7 +177,7 @@ export default function DashboardPage() {
         <div className="glass p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-white">Recent Activity</h2>
-            <button className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
+            <button className="text-xs text-[#d4684b] hover:text-[#e88d72] transition-colors">
               View All
             </button>
           </div>
@@ -202,9 +196,9 @@ export default function DashboardPage() {
         </div>
         <div className="space-y-4">
           {[
-            { label: 'Complete 5 mock interviews', value: 3, max: 5 },
-            { label: 'Solve 15 coding problems', value: 12, max: 15 },
-            { label: 'Practice 30 minutes daily', value: 5, max: 7 },
+            { label: 'Complete 5 mock interviews', value: Math.min(interviewsTaken, 5), max: 5 },
+            { label: 'Solve 15 coding problems', value: Math.min(problemsSolved, 15), max: 15 },
+            { label: 'Practice 30 minutes daily', value: 0, max: 7 },
           ].map((goal, i) => (
             <div key={i}>
               <div className="flex items-center justify-between mb-1.5">

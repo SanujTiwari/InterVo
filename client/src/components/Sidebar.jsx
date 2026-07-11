@@ -65,7 +65,7 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                 isActive
-                  ? 'bg-gradient-to-r from-blue-500/15 to-purple-500/15 text-white border border-blue-500/20'
+                  ? 'bg-gradient-to-r from-[#d4684b]/15 to-[#e88d72]/15 text-white border border-[#d4684b]/20'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`
             }

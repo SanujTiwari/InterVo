@@ -40,7 +40,7 @@ export default function ProgressBar({
           transition={{ duration: 1, ease: 'easeOut' }}
           className={`h-full rounded-full ${
             gradient
-              ? 'bg-gradient-to-r from-blue-500 to-purple-500'
+              ? 'bg-gradient-to-r from-[#d4684b] to-[#e88d72]'
               : 'bg-blue-500'
           }`}
         />
