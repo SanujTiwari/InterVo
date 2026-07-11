@@ -50,8 +50,18 @@ const quickActions = [
 ];
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const firstName = user?.full_name?.split(' ')[0] || 'there';
+
+  const xpPoints = profile?.xp_points ?? 0;
+  const currentStreak = profile?.current_streak ?? 0;
+  const interviewsTaken = profile?.interviews_taken ?? 0;
+  const problemsSolved = profile?.problems_solved ?? 0;
+  const avgScore = profile?.avg_score ?? 0;
+
+  const level = Math.max(1, Math.floor(xpPoints / 200));
+  const xpInLevel = xpPoints % 200;
+  const xpToNext = 200 - xpInLevel;
 
   return (
     <div className="space-y-8">
@@ -68,19 +78,19 @@ export default function DashboardPage() {
               Welcome back, {firstName}! 👋
             </h1>
             <p className="text-slate-400">
-              You're on a <span className="text-amber-400 font-medium">5 day streak</span>. 
+              You're on a <span className="text-amber-400 font-medium">{currentStreak} day streak</span>. 
               Keep it going — consistency is key!
             </p>
           </div>
           <div className="flex items-center gap-3">
             <div className="text-center px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
               <Flame className="w-5 h-5 text-amber-400 mx-auto mb-1" />
-              <p className="text-lg font-bold text-amber-400">5</p>
+              <p className="text-lg font-bold text-amber-400">{currentStreak}</p>
               <p className="text-xs text-amber-400/70">Streak</p>
             </div>
             <div className="text-center px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
               <Zap className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-              <p className="text-lg font-bold text-blue-400">2,450</p>
+              <p className="text-lg font-bold text-blue-400">{xpPoints.toLocaleString()}</p>
               <p className="text-xs text-blue-400/70">XP</p>
             </div>
           </div>
@@ -92,8 +102,8 @@ export default function DashboardPage() {
         <StatCard
           icon={Mic}
           label="Interviews Taken"
-          value="24"
-          change="+3 this week"
+          value={String(interviewsTaken)}
+          change="+1 this week"
           changeType="positive"
           iconColor="text-blue-400"
           iconBg="bg-blue-500/10"
@@ -101,8 +111,8 @@ export default function DashboardPage() {
         <StatCard
           icon={Code2}
           label="Problems Solved"
-          value="142"
-          change="+12 this week"
+          value={String(problemsSolved)}
+          change="+2 this week"
           changeType="positive"
           iconColor="text-emerald-400"
           iconBg="bg-emerald-500/10"
@@ -110,8 +120,8 @@ export default function DashboardPage() {
         <StatCard
           icon={Target}
           label="Avg. Score"
-          value="78%"
-          change="+5% vs last week"
+          value={`${avgScore}%`}
+          change="+3% vs last week"
           changeType="positive"
           iconColor="text-purple-400"
           iconBg="bg-purple-500/10"
@@ -119,8 +129,8 @@ export default function DashboardPage() {
         <StatCard
           icon={TrendingUp}
           label="Level"
-          value="12"
-          change="450 XP to next"
+          value={String(level)}
+          change={`${xpToNext} XP to next`}
           changeType="positive"
           iconColor="text-amber-400"
           iconBg="bg-amber-500/10"
@@ -130,10 +140,10 @@ export default function DashboardPage() {
       {/* XP Progress */}
       <div className="glass p-5">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-medium text-slate-300">Level 12 Progress</span>
-          <span className="text-xs text-slate-500">2,450 / 3,000 XP</span>
+          <span className="text-sm font-medium text-slate-300">Level {level} Progress</span>
+          <span className="text-xs text-slate-500">{xpInLevel} / 200 XP</span>
         </div>
-        <ProgressBar value={2450} max={3000} showValue={false} size="md" />
+        <ProgressBar value={xpInLevel} max={200} showValue={false} size="md" />
       </div>
 
       {/* Quick Actions */}

@@ -40,10 +40,22 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     xp_points       INTEGER NOT NULL DEFAULT 0,
     current_streak  INTEGER NOT NULL DEFAULT 0,
     longest_streak  INTEGER NOT NULL DEFAULT 0,
+    interviews_taken INTEGER NOT NULL DEFAULT 0,
+    problems_solved INTEGER NOT NULL DEFAULT 0,
+    avg_score       INTEGER NOT NULL DEFAULT 0,
+    avg_solve_time  INTEGER NOT NULL DEFAULT 0,
+    acceptance_rate INTEGER NOT NULL DEFAULT 0,
     last_active_at  TIMESTAMPTZ,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Ensure stats columns exist on pre-existing user_profiles tables
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS interviews_taken INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS problems_solved INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS avg_score INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS avg_solve_time INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS acceptance_rate INTEGER NOT NULL DEFAULT 0;
 
 -- ─── Sessions Table ───────────────────────────────────────────
 -- Stores refresh tokens for JWT-based auth.
@@ -75,11 +87,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
 CREATE TRIGGER update_users_updated_at
     BEFORE UPDATE ON users
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_user_profiles_updated_at ON user_profiles;
 CREATE TRIGGER update_user_profiles_updated_at
     BEFORE UPDATE ON user_profiles
     FOR EACH ROW

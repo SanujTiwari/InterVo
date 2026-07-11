@@ -11,13 +11,14 @@ import {
   Code2,
   Users,
   Server,
-  Star,
   Clock,
   CheckCircle2,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
+import { useAuth } from '../context/AuthContext';
+import api from '../api/axios';
 
 const interviewTypes = [
   {
@@ -102,6 +103,7 @@ const mockQuestions = [
 ];
 
 export default function MockInterviewPage() {
+  const { refreshProfile } = useAuth();
   const [selectedType, setSelectedType] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState('Medium');
   const [isInterviewing, setIsInterviewing] = useState(false);
@@ -123,6 +125,22 @@ export default function MockInterviewPage() {
   const endInterview = () => {
     setIsInterviewing(false);
     if (window._interviewTimer) clearInterval(window._interviewTimer);
+  };
+
+  const finishInterview = async () => {
+    setIsInterviewing(false);
+    if (window._interviewTimer) clearInterval(window._interviewTimer);
+    
+    // Simulate score based on metrics or random between 70 and 95
+    const simulatedScore = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
+    
+    try {
+      await api.post('/users/profile/interview', { score: simulatedScore });
+      await refreshProfile();
+      alert(`Interview completed successfully! Score: ${simulatedScore}% (+100 XP)`);
+    } catch (err) {
+      console.error('Error saving interview statistics:', err);
+    }
   };
 
   const formatTime = (seconds) => {
@@ -367,7 +385,7 @@ export default function MockInterviewPage() {
                   Next Question
                 </Button>
               ) : (
-                <Button variant="primary" icon={CheckCircle2} onClick={endInterview}>
+                <Button variant="primary" icon={CheckCircle2} onClick={finishInterview}>
                   Finish Interview
                 </Button>
               )}

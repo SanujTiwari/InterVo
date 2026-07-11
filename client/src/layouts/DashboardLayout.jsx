@@ -1,8 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Sidebar from '../components/Sidebar';
+import { useAuth } from '../context/AuthContext';
 
 export default function DashboardLayout() {
+  const { profile } = useAuth();
+  const streak = profile?.current_streak ?? 0;
+
   return (
     <div className="min-h-screen bg-navy-950">
       <Sidebar />
@@ -15,7 +19,7 @@ export default function DashboardLayout() {
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
               <span className="text-amber-400 text-sm">🔥</span>
-              <span className="text-xs font-medium text-amber-400">5 day streak</span>
+              <span className="text-xs font-medium text-amber-400">{streak} day streak</span>
             </div>
           </div>
         </header>

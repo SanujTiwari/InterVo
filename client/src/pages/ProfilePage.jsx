@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  User,
   Mail,
   GraduationCap,
   Target,
   Briefcase,
   Flame,
-  Zap,
   Trophy,
   Mic,
   Code2,
   Calendar,
-  MapPin,
   Edit3,
   Save,
   X,
@@ -22,34 +19,53 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
 import { useAuth } from '../context/AuthContext';
-
-const mockProfile = {
-  full_name: 'Demo User',
-  email: 'demo@intervo.dev',
-  bio: 'Aspiring software engineer passionate about building scalable web applications and solving complex problems.',
-  college: 'Indian Institute of Technology, Delhi',
-  graduation_year: 2026,
-  target_company: 'Google',
-  target_role: 'Software Development Engineer',
-  skills: ['JavaScript', 'React', 'Node.js', 'Python', 'SQL', 'TypeScript', 'MongoDB', 'Git', 'Docker', 'System Design'],
-  xp_points: 2450,
-  current_streak: 5,
-  longest_streak: 14,
-  interviews_taken: 24,
-  problems_solved: 142,
-  joined: 'March 2026',
-};
+import api from '../api/axios';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
-  const [profile] = useState({ ...mockProfile, ...user });
+  const { user, profile, updateProfile, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState(profile);
+  const [editForm, setEditForm] = useState(null);
   const [newSkill, setNewSkill] = useState('');
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // In real app, save to API
+  const displayProfile = {
+    full_name: profile?.full_name || user?.full_name || 'User',
+    email: profile?.email || user?.email || '',
+    bio: profile?.bio || 'No bio added yet. Click Edit Profile to add one.',
+    college: profile?.college || 'Not specified',
+    graduation_year: profile?.graduation_year || 'N/A',
+    target_company: profile?.target_company || 'Not specified',
+    target_role: profile?.target_role || 'Not specified',
+    skills: profile?.skills || [],
+    xp_points: profile?.xp_points ?? 0,
+    current_streak: profile?.current_streak ?? 0,
+    longest_streak: profile?.longest_streak ?? 0,
+    interviews_taken: profile?.interviews_taken ?? 0,
+    problems_solved: profile?.problems_solved ?? 0,
+    joined: profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A',
+  };
+
+  const handleEditStart = () => {
+    setEditForm({
+      full_name: displayProfile.full_name,
+      bio: profile?.bio || '',
+      college: profile?.college || '',
+      graduation_year: profile?.graduation_year || '',
+      target_company: profile?.target_company || '',
+      target_role: profile?.target_role || '',
+      skills: profile?.skills || [],
+    });
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      const { data } = await api.put('/users/profile', editForm);
+      updateProfile(data.data);
+      updateUser({ ...user, full_name: data.data.full_name });
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Error saving profile:', err);
+    }
   };
 
   const addSkill = () => {
@@ -69,8 +85,8 @@ export default function ProfilePage() {
     });
   };
 
-  const level = Math.floor(profile.xp_points / 200);
-  const xpInLevel = profile.xp_points % 200;
+  const level = Math.max(1, Math.floor(displayProfile.xp_points / 200));
+  const xpInLevel = displayProfile.xp_points % 200;
 
   return (
     <div className="space-y-8">
@@ -80,7 +96,7 @@ export default function ProfilePage() {
           <p className="text-slate-400">Manage your profile and track your progress.</p>
         </div>
         {!isEditing ? (
-          <Button variant="secondary" size="sm" icon={Edit3} onClick={() => setIsEditing(true)}>
+          <Button variant="secondary" size="sm" icon={Edit3} onClick={handleEditStart}>
             Edit Profile
           </Button>
         ) : (
@@ -95,7 +111,7 @@ export default function ProfilePage() {
         )}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column — Profile Info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Avatar & Basic Info */}
@@ -106,10 +122,10 @@ export default function ProfilePage() {
           >
             <div className="flex items-start gap-5">
               <div className="w-20 h-20 rounded-2xl bg-gradient-accent flex items-center justify-center text-2xl font-bold text-white flex-shrink-0">
-                {profile.full_name?.[0] || 'U'}
+                {displayProfile.full_name?.[0] || 'U'}
               </div>
               <div className="flex-1 space-y-4">
-                {isEditing ? (
+                {isEditing && editForm ? (
                   <div className="space-y-3">
                     <div>
                       <label className="text-xs text-slate-500 mb-1 block">Full Name</label>
@@ -132,13 +148,13 @@ export default function ProfilePage() {
                 ) : (
                   <>
                     <div>
-                      <h2 className="text-xl font-bold text-white">{profile.full_name}</h2>
+                      <h2 className="text-xl font-bold text-white">{displayProfile.full_name}</h2>
                       <div className="flex items-center gap-2 mt-1">
                         <Mail className="w-3.5 h-3.5 text-slate-500" />
-                        <span className="text-sm text-slate-400">{profile.email}</span>
+                        <span className="text-sm text-slate-400">{displayProfile.email}</span>
                       </div>
                     </div>
-                    <p className="text-sm text-slate-400 leading-relaxed">{profile.bio}</p>
+                    <p className="text-sm text-slate-400 leading-relaxed">{displayProfile.bio}</p>
                   </>
                 )}
               </div>
@@ -154,7 +170,7 @@ export default function ProfilePage() {
           >
             <h3 className="text-sm font-semibold text-white mb-4">Education & Goals</h3>
             <div className="grid sm:grid-cols-2 gap-4">
-              {isEditing ? (
+              {isEditing && editForm ? (
                 <>
                   <div>
                     <label className="text-xs text-slate-500 mb-1 block">College</label>
@@ -192,10 +208,10 @@ export default function ProfilePage() {
                 </>
               ) : (
                 <>
-                  <InfoItem icon={GraduationCap} label="College" value={profile.college} />
-                  <InfoItem icon={Calendar} label="Graduation" value={profile.graduation_year} />
-                  <InfoItem icon={Target} label="Target Company" value={profile.target_company} />
-                  <InfoItem icon={Briefcase} label="Target Role" value={profile.target_role} />
+                  <InfoItem icon={GraduationCap} label="College" value={displayProfile.college} />
+                  <InfoItem icon={Calendar} label="Graduation" value={displayProfile.graduation_year} />
+                  <InfoItem icon={Target} label="Target Company" value={displayProfile.target_company} />
+                  <InfoItem icon={Briefcase} label="Target Role" value={displayProfile.target_role} />
                 </>
               )}
             </div>
@@ -210,11 +226,11 @@ export default function ProfilePage() {
           >
             <h3 className="text-sm font-semibold text-white mb-4">Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {(isEditing ? editForm.skills : profile.skills).map((skill) => (
+              {(isEditing && editForm ? editForm.skills : displayProfile.skills).map((skill) => (
                 <div key={skill} className="flex items-center">
                   <Badge color="blue" size="md">
                     {skill}
-                    {isEditing && (
+                    {isEditing && editForm && (
                       <button
                         onClick={() => removeSkill(skill)}
                         className="ml-1.5 text-blue-300 hover:text-white"
@@ -225,7 +241,7 @@ export default function ProfilePage() {
                   </Badge>
                 </div>
               ))}
-              {isEditing && (
+              {isEditing && editForm && (
                 <div className="flex items-center gap-1.5">
                   <input
                     className="w-28 px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500/40"
@@ -259,7 +275,7 @@ export default function ProfilePage() {
                 <span className="text-xl font-bold text-white">{level}</span>
               </div>
               <p className="text-sm font-semibold text-white">Level {level}</p>
-              <p className="text-xs text-slate-500">{profile.xp_points} XP total</p>
+              <p className="text-xs text-slate-500">{displayProfile.xp_points.toLocaleString()} XP total</p>
             </div>
             <ProgressBar
               value={xpInLevel}
@@ -278,11 +294,11 @@ export default function ProfilePage() {
           >
             <h3 className="text-sm font-semibold text-white">Statistics</h3>
             <div className="space-y-4">
-              <StatItem icon={Flame} label="Current Streak" value={`${profile.current_streak} days`} color="text-amber-400" bg="bg-amber-500/10" />
-              <StatItem icon={Trophy} label="Longest Streak" value={`${profile.longest_streak} days`} color="text-purple-400" bg="bg-purple-500/10" />
-              <StatItem icon={Mic} label="Interviews" value={profile.interviews_taken} color="text-blue-400" bg="bg-blue-500/10" />
-              <StatItem icon={Code2} label="Problems Solved" value={profile.problems_solved} color="text-emerald-400" bg="bg-emerald-500/10" />
-              <StatItem icon={Calendar} label="Member Since" value={profile.joined} color="text-slate-400" bg="bg-slate-500/10" />
+              <StatItem icon={Flame} label="Current Streak" value={`${displayProfile.current_streak} days`} color="text-amber-400" bg="bg-amber-500/10" />
+              <StatItem icon={Trophy} label="Longest Streak" value={`${displayProfile.longest_streak} days`} color="text-purple-400" bg="bg-purple-500/10" />
+              <StatItem icon={Mic} label="Interviews" value={displayProfile.interviews_taken} color="text-blue-400" bg="bg-blue-500/10" />
+              <StatItem icon={Code2} label="Problems Solved" value={displayProfile.problems_solved} color="text-emerald-400" bg="bg-emerald-500/10" />
+              <StatItem icon={Calendar} label="Member Since" value={displayProfile.joined} color="text-slate-400" bg="bg-slate-500/10" />
             </div>
           </motion.div>
         </div>

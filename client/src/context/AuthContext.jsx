@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 
 const initialState = {
   user: null,
+  profile: null,
   token: localStorage.getItem('intervo_token'),
   isAuthenticated: false,
   isLoading: true,
@@ -20,10 +21,16 @@ function authReducer(state, action) {
         isAuthenticated: true,
         isLoading: false,
       };
+    case 'SET_PROFILE':
+      return {
+        ...state,
+        profile: action.payload,
+      };
     case 'LOGOUT':
       return {
         ...state,
         user: null,
+        profile: null,
         token: null,
         isAuthenticated: false,
         isLoading: false,
@@ -52,7 +59,6 @@ export function AuthProvider({ children }) {
     // Check for existing token on mount
     const token = localStorage.getItem('intervo_token');
     if (token) {
-      // In a real app, verify token with the server
       const savedUser = localStorage.getItem('intervo_user');
       if (savedUser) {
         dispatch({
@@ -66,6 +72,22 @@ export function AuthProvider({ children }) {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
   }, []);
+
+  // Fetch profile when authenticated
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const { data } = await api.get('/users/profile');
+        dispatch({ type: 'SET_PROFILE', payload: data.data });
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      }
+    };
+
+    if (state.isAuthenticated && !state.profile) {
+      fetchProfile();
+    }
+  }, [state.isAuthenticated, state.profile]);
 
   const login = (user, token, refreshToken) => {
     localStorage.setItem('intervo_token', token);
@@ -90,8 +112,22 @@ export function AuthProvider({ children }) {
     dispatch({ type: 'SET_USER', payload: user });
   };
 
+  const refreshProfile = async () => {
+    try {
+      const { data } = await api.get('/users/profile');
+      dispatch({ type: 'SET_PROFILE', payload: data.data });
+      return data.data;
+    } catch (err) {
+      console.error('Error refreshing profile:', err);
+    }
+  };
+
+  const updateProfile = (profileData) => {
+    dispatch({ type: 'SET_PROFILE', payload: profileData });
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ ...state, login, logout, updateUser, refreshProfile, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

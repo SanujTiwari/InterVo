@@ -6,24 +6,21 @@ import { testConnection } from './src/config/db.js';
 const startServer = async () => {
   try {
     console.log('🔄 Connecting to database...');
+
     const dbConnected = await testConnection();
+
     if (!dbConnected) {
       console.error('❌ Database connection failed on startup. Exiting...');
       process.exit(1);
     }
 
+    console.log('✅ Database connected successfully.');
+
     app.listen(env.port, () => {
-      console.log(`
-  ╔══════════════════════════════════════════════╗
-  ║                                              ║
-  ║   🚀  Intervo API Server                     ║
-  ║                                              ║
-  ║   Port:        ${String(env.port).padEnd(28)}║
-  ║   Environment: ${env.nodeEnv.padEnd(28)}║
-  ║   Health:      /api/v1/health                ║
-  ║                                              ║
-  ╚══════════════════════════════════════════════╝
-      `);
+      console.log('🚀 Intervo API Server started successfully.');
+      console.log(`📡 Server running on port ${env.port}`);
+      console.log(`🌍 Environment: ${env.nodeEnv}`);
+      console.log(`❤️ Health Check: http://localhost:${env.port}/api/v1/health`);
     });
   } catch (error) {
     logger.error('Failed to start server', { error: error.message });
@@ -33,13 +30,19 @@ const startServer = async () => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
-  logger.error('Unhandled Rejection', { error: err.message, stack: err.stack });
+  logger.error('Unhandled Rejection', {
+    error: err.message,
+    stack: err.stack,
+  });
   process.exit(1);
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
-  logger.error('Uncaught Exception', { error: err.message, stack: err.stack });
+  logger.error('Uncaught Exception', {
+    error: err.message,
+    stack: err.stack,
+  });
   process.exit(1);
 });
 

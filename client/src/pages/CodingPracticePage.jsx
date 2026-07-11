@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Search,
-  Filter,
   CheckCircle2,
   Circle,
   Clock,
-  ChevronRight,
   Code2,
   Bookmark,
   TrendingUp,
@@ -14,6 +12,8 @@ import {
 } from 'lucide-react';
 import Badge from '../components/ui/Badge';
 import StatCard from '../components/ui/StatCard';
+import { useAuth } from '../context/AuthContext';
+import api from '../api/axios';
 
 const topics = [
   'All', 'Arrays', 'Strings', 'Linked Lists', 'Trees', 'Graphs',
@@ -42,19 +42,40 @@ const difficultyColor = {
 };
 
 export default function CodingPracticePage() {
+  const { profile, refreshProfile } = useAuth();
+  const [localProblems, setLocalProblems] = useState(problems);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState(null);
   const [selectedProblem, setSelectedProblem] = useState(null);
 
-  const filtered = problems.filter((p) => {
+  const handleSubmit = async () => {
+    if (!selectedProblem) return;
+    try {
+      await api.post('/users/profile/problem');
+      await refreshProfile();
+      
+      setLocalProblems(prev => prev.map(p => p.id === selectedProblem.id ? { ...p, solved: true } : p));
+      setSelectedProblem(prev => ({ ...prev, solved: true }));
+      
+      alert('Code submitted successfully! +50 XP!');
+    } catch (err) {
+      console.error('Error submitting code:', err);
+      alert('Failed to submit code. Please try again.');
+    }
+  };
+
+  const filtered = localProblems.filter((p) => {
     const matchSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchTopic = selectedTopic === 'All' || p.topic === selectedTopic;
     const matchDifficulty = !selectedDifficulty || p.difficulty === selectedDifficulty;
     return matchSearch && matchTopic && matchDifficulty;
   });
 
-  const solvedCount = problems.filter((p) => p.solved).length;
+  const currentStreak = profile?.current_streak ?? 0;
+  const dbProblemsSolved = profile?.problems_solved ?? 0;
+  const acceptanceRate = profile?.acceptance_rate || 68; // fallback to 68% if 0
+  const avgSolveTime = profile?.avg_solve_time || 18; // fallback to 18 min if 0
 
   return (
     <div className="space-y-8">
@@ -70,14 +91,14 @@ export default function CodingPracticePage() {
         <StatCard
           icon={CheckCircle2}
           label="Problems Solved"
-          value={`${solvedCount}/${problems.length}`}
+          value={String(dbProblemsSolved)}
           iconColor="text-emerald-400"
           iconBg="bg-emerald-500/10"
         />
         <StatCard
           icon={TrendingUp}
           label="Acceptance Rate"
-          value="68%"
+          value={`${acceptanceRate}%`}
           change="+4% this week"
           changeType="positive"
           iconColor="text-blue-400"
@@ -86,14 +107,14 @@ export default function CodingPracticePage() {
         <StatCard
           icon={Clock}
           label="Avg. Solve Time"
-          value="18 min"
+          value={`${avgSolveTime} min`}
           iconColor="text-purple-400"
           iconBg="bg-purple-500/10"
         />
         <StatCard
           icon={BarChart3}
           label="Current Streak"
-          value="5 days"
+          value={`${currentStreak} days`}
           iconColor="text-amber-400"
           iconBg="bg-amber-500/10"
         />
@@ -272,7 +293,7 @@ Explanation: nums[0] + nums[1] == 9`}
                 <button className="btn-primary flex-1 text-sm py-2.5">
                   Run Code
                 </button>
-                <button className="btn-secondary flex-1 text-sm py-2.5">
+                <button className="btn-secondary flex-1 text-sm py-2.5" onClick={handleSubmit}>
                   Submit
                 </button>
               </div>
