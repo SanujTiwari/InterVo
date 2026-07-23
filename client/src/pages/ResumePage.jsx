@@ -37,11 +37,7 @@ const mockAnalysis = {
   ],
 };
 
-const pastAnalyses = [
-  { id: 1, name: 'Resume_v3.pdf', score: 82, date: 'Jun 28, 2026' },
-  { id: 2, name: 'Resume_v2.pdf', score: 71, date: 'Jun 15, 2026' },
-  { id: 3, name: 'Resume_v1.pdf', score: 58, date: 'May 30, 2026' },
-];
+const pastAnalyses = [];
 
 export default function ResumePage() {
   const [isDragOver, setIsDragOver] = useState(false);
@@ -124,14 +120,14 @@ export default function ResumePage() {
               onDrop={handleDrop}
               className={`glass p-10 text-center transition-all duration-300 cursor-pointer ${
                 isDragOver
-                  ? 'border-blue-500/40 bg-blue-500/5 shadow-glow-blue'
+                  ? 'border-[#d4684b]/40 bg-[#d4684b]/5 shadow-glow-blue'
                   : 'hover:border-white/10'
               }`}
             >
               {!uploadedFile ? (
                 <>
-                  <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-5">
-                    <Upload className="w-8 h-8 text-blue-400" />
+                  <div className="w-16 h-16 rounded-2xl bg-[#d4684b]/10 flex items-center justify-center mx-auto mb-5">
+                    <Upload className="w-8 h-8 text-[#d4684b]" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">
                     Drop your resume here
@@ -153,8 +149,8 @@ export default function ResumePage() {
                 </>
               ) : (
                 <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-blue-400" />
+                  <div className="w-12 h-12 rounded-xl bg-[#d4684b]/10 flex items-center justify-center">
+                    <FileText className="w-6 h-6 text-[#d4684b]" />
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-medium text-white">{uploadedFile.name}</p>
@@ -190,30 +186,38 @@ export default function ResumePage() {
             {/* Past Analyses */}
             <div>
               <h2 className="text-lg font-semibold text-white mb-4">Analysis History</h2>
-              <div className="space-y-3">
-                {pastAnalyses.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setAnalysis(mockAnalysis)}
-                    className="w-full glass p-4 flex items-center gap-4 text-left hover:border-white/10 transition-all group"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-white">{item.name}</p>
-                      <p className="text-xs text-slate-500">{item.date}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-lg font-bold ${
-                        item.score >= 80 ? 'text-emerald-400' : item.score >= 60 ? 'text-amber-400' : 'text-red-400'
-                      }`}>{item.score}</p>
-                      <p className="text-xs text-slate-600">score</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400" />
-                  </button>
-                ))}
-              </div>
+              {pastAnalyses.length === 0 ? (
+                <div className="glass p-8 text-center">
+                  <FileText className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <p className="text-sm text-slate-500 mb-1">No analyses completed yet</p>
+                  <p className="text-xs text-slate-600">Upload your resume above to get a detailed AI feedback review.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {pastAnalyses.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setAnalysis(mockAnalysis)}
+                      className="w-full glass p-4 flex items-center gap-4 text-left hover:border-white/10 transition-all group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#d4684b]/10 flex items-center justify-center">
+                        <FileText className="w-5 h-5 text-[#d4684b]" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-white">{item.name}</p>
+                        <p className="text-xs text-slate-500">{item.date}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-lg font-bold ${
+                          item.score >= 80 ? 'text-emerald-400' : item.score >= 60 ? 'text-amber-400' : 'text-red-400'
+                        }`}>{item.score}</p>
+                        <p className="text-xs text-slate-600">score</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         ) : (
@@ -255,8 +259,8 @@ export default function ResumePage() {
                   />
                   <defs>
                     <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="100%" stopColor="#8b5cf6" />
+                      <stop offset="0%" stopColor="#d4684b" />
+                      <stop offset="100%" stopColor="#e88d72" />
                     </linearGradient>
                   </defs>
                 </svg>

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Mic,
+  BookOpen,
   Code2,
   FileText,
   Map,
@@ -27,10 +28,10 @@ const quickActions = [
     link: '/interviews',
   },
   {
-    title: 'Practice Coding',
-    description: 'Solve coding challenges',
-    icon: Code2,
-    color: 'from-emerald-600 to-emerald-500',
+    title: 'Documentation',
+    description: 'Explore documentation and core concepts',
+    icon: BookOpen,
+    color: 'from-[#d4684b] to-[#e88d72]',
     link: '/coding',
   },
   {

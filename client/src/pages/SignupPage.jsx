@@ -1,53 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Sparkles, Check, X } from 'lucide-react';
+import { Mail, Lock, User, BookOpen } from 'lucide-react';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
-
-function PasswordStrength({ password }) {
-  const checks = [
-    { label: 'At least 8 characters', pass: password.length >= 8 },
-    { label: 'Uppercase letter', pass: /[A-Z]/.test(password) },
-    { label: 'Lowercase letter', pass: /[a-z]/.test(password) },
-    { label: 'Number', pass: /\d/.test(password) },
-  ];
-
-  const strength = checks.filter((c) => c.pass).length;
-  const colors = ['bg-red-500', 'bg-orange-500', 'bg-amber-500', 'bg-emerald-500'];
-
-  if (!password) return null;
-
-  return (
-    <div className="space-y-3 mt-3">
-      <div className="flex gap-1">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-              i < strength ? colors[strength - 1] : 'bg-slate-700'
-            }`}
-          />
-        ))}
-      </div>
-      <div className="grid grid-cols-2 gap-1.5">
-        {checks.map((check, i) => (
-          <div key={i} className="flex items-center gap-1.5">
-            {check.pass ? (
-              <Check className="w-3 h-3 text-emerald-400" />
-            ) : (
-              <X className="w-3 h-3 text-slate-600" />
-            )}
-            <span className={`text-xs ${check.pass ? 'text-emerald-400' : 'text-slate-600'}`}>
-              {check.label}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -133,30 +90,34 @@ export default function SignupPage() {
   };
 
   return (
-    <div>
+    <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] p-8 sm:p-10 backdrop-blur-xl shadow-2xl">
+      {/* Subtle top light glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-[#d4684b]/40 to-transparent" />
+      
       {/* Mobile logo */}
       <div className="lg:hidden flex items-center gap-2 mb-8">
-        <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-white" />
+        <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow-accent">
+          <BookOpen className="w-5 h-5 text-white" />
         </div>
         <span className="text-xl font-bold text-white">
           Inter<span className="gradient-text">vo</span>
         </span>
       </div>
 
-      <h2 className="text-2xl font-bold text-white mb-2">Create your account</h2>
-      <p className="text-slate-400 mb-8">
+      <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Create Account</h2>
+      <p className="text-sm text-slate-400 mb-8">
         Start your journey to interview success.
       </p>
 
       {/* Google OAuth */}
       <div className="w-full flex justify-center mb-6 min-h-[44px]">
-        <div id="google-signup-btn" />
+        <div id="google-signup-btn" className="w-full flex justify-center" />
       </div>
 
+      {/* Divider */}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex-1 h-px bg-white/5" />
-        <span className="text-xs text-slate-500 uppercase tracking-wider">or</span>
+        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">or</span>
         <div className="flex-1 h-px bg-white/5" />
       </div>
 
@@ -171,7 +132,7 @@ export default function SignupPage() {
           error={errors.fullName}
         />
         <Input
-          label="Email"
+          label="Email Address"
           name="email"
           type="email"
           placeholder="you@example.com"
@@ -180,19 +141,16 @@ export default function SignupPage() {
           onChange={handleChange}
           error={errors.email}
         />
-        <div>
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            icon={Lock}
-            value={form.password}
-            onChange={handleChange}
-            error={errors.password}
-          />
-          <PasswordStrength password={form.password} />
-        </div>
+        <Input
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          icon={Lock}
+          value={form.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
         <Input
           label="Confirm Password"
           name="confirmPassword"
@@ -204,19 +162,19 @@ export default function SignupPage() {
           error={errors.confirmPassword}
         />
 
-        <label className="flex items-start gap-2.5 cursor-pointer">
+        <label className="flex items-start gap-2.5 cursor-pointer pt-1 select-none">
           <input
             type="checkbox"
             name="acceptTerms"
             checked={form.acceptTerms}
             onChange={handleChange}
-            className="w-4 h-4 mt-0.5 rounded border-slate-600 bg-navy-800 text-blue-500 focus:ring-blue-500/20"
+            className="w-4 h-4 mt-0.5 rounded border-white/10 bg-navy-900/50 text-[#d4684b] focus:ring-[#d4684b]/20 focus:ring-offset-navy-950 cursor-pointer"
           />
-          <span className="text-sm text-slate-400">
+          <span className="text-xs text-slate-400 leading-normal">
             I agree to the{' '}
-            <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a>
+            <a href="#" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">Terms of Service</a>
             {' '}and{' '}
-            <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>
+            <a href="#" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">Privacy Policy</a>
           </span>
         </label>
         {errors.acceptTerms && (
@@ -227,15 +185,15 @@ export default function SignupPage() {
           type="submit"
           variant="primary"
           loading={loading}
-          className="w-full mt-2"
+          className="w-full mt-4 h-11 rounded-xl font-bold bg-gradient-accent hover:bg-gradient-accent-hover text-white transition-all shadow-glow-accent/20 hover:shadow-glow-accent/40"
         >
           Create Account
         </Button>
       </form>
 
-      <p className="text-sm text-slate-400 text-center mt-6">
+      <p className="text-sm text-slate-400 text-center mt-8">
         Already have an account?{' '}
-        <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+        <Link to="/login" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">
           Log in
         </Link>
       </p>

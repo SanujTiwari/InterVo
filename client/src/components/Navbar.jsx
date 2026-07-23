@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X, BookOpen } from 'lucide-react';
 import Button from './ui/Button';
 
 export default function Navbar() {
@@ -36,7 +36,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow-blue group-hover:shadow-glow-purple transition-shadow duration-300">
-              <Sparkles className="w-5 h-5 text-white" />
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-white">
               Inter<span className="gradient-text">vo</span>

@@ -1,305 +1,682 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search,
-  CheckCircle2,
-  Circle,
-  Clock,
+  BookOpen,
   Code2,
-  Bookmark,
-  TrendingUp,
-  BarChart3,
+  Copy,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Lightbulb,
+  ChevronDown,
 } from 'lucide-react';
 import Badge from '../components/ui/Badge';
-import StatCard from '../components/ui/StatCard';
-import { useAuth } from '../context/AuthContext';
-import api from '../api/axios';
 
-const topics = [
-  'All', 'Arrays', 'Strings', 'Linked Lists', 'Trees', 'Graphs',
-  'Dynamic Programming', 'Sorting', 'Binary Search', 'Stack', 'Queue', 'Heap',
-];
+const tutorialsData = {
+  java: {
+  name: "Java",
+  subtitle: "Object-Oriented Programming Language",
+  paradigm: "Object-Oriented",
+  typing: "Static / Strong",
+  topics: [
+    {
+      id: "java-introduction",
+      title: "Introduction to Java",
+      difficulty: "Easy",
+      description:
+        "Java is a high-level, object-oriented, platform-independent programming language developed by Sun Microsystems (now Oracle). Java follows the principle of 'Write Once, Run Anywhere (WORA)', meaning compiled Java code can run on any platform that has a Java Virtual Machine (JVM). It is widely used in enterprise applications, Android development, backend systems, cloud computing, and distributed applications.",
 
-const problems = [
-  { id: 1, title: 'Two Sum', topic: 'Arrays', difficulty: 'Easy', solved: true, acceptance: '49.2%', likes: 23400 },
-  { id: 2, title: 'Add Two Numbers', topic: 'Linked Lists', difficulty: 'Medium', solved: true, acceptance: '40.1%', likes: 18200 },
-  { id: 3, title: 'Longest Substring Without Repeating', topic: 'Strings', difficulty: 'Medium', solved: false, acceptance: '33.8%', likes: 20100 },
-  { id: 4, title: 'Median of Two Sorted Arrays', topic: 'Arrays', difficulty: 'Hard', solved: false, acceptance: '36.1%', likes: 15600 },
-  { id: 5, title: 'Valid Parentheses', topic: 'Stack', difficulty: 'Easy', solved: true, acceptance: '42.3%', likes: 12800 },
-  { id: 6, title: 'Merge Two Sorted Lists', topic: 'Linked Lists', difficulty: 'Easy', solved: true, acceptance: '61.8%', likes: 11200 },
-  { id: 7, title: 'Maximum Subarray', topic: 'Dynamic Programming', difficulty: 'Medium', solved: false, acceptance: '49.6%', likes: 19500 },
-  { id: 8, title: 'Binary Tree Inorder Traversal', topic: 'Trees', difficulty: 'Easy', solved: true, acceptance: '73.2%', likes: 8900 },
-  { id: 9, title: 'LRU Cache', topic: 'Design', difficulty: 'Medium', solved: false, acceptance: '40.3%', likes: 14700 },
-  { id: 10, title: 'Merge Intervals', topic: 'Sorting', difficulty: 'Medium', solved: true, acceptance: '45.7%', likes: 13400 },
-  { id: 11, title: 'Course Schedule', topic: 'Graphs', difficulty: 'Medium', solved: false, acceptance: '45.4%', likes: 9800 },
-  { id: 12, title: 'Trapping Rain Water', topic: 'Dynamic Programming', difficulty: 'Hard', solved: false, acceptance: '58.8%', likes: 16300 },
-];
+      faqs: [
+        {
+          question: "Why is Java platform independent?",
+          answer:
+            "Java source code is compiled into bytecode, which runs on the JVM. Since JVM is available for multiple operating systems, Java programs can execute without modification."
+        },
+        {
+          question: "What are the main features of Java?",
+          answer:
+            "Platform Independent, Object-Oriented, Robust, Secure, Multithreaded, Portable, Architecture Neutral, High Performance (through JIT), Distributed, and Dynamic."
+        },
+        {
+          question: "Why is Java called both compiled and interpreted?",
+          answer:
+            "Java code is first compiled into bytecode using javac, then the JVM interprets or JIT-compiles the bytecode into machine code during execution."
+        }
+      ]
+    },
 
-const difficultyColor = {
-  Easy: 'green',
-  Medium: 'yellow',
-  Hard: 'red',
+    {
+      id: "jvm-jre-jdk",
+      title: "JVM, JRE & JDK",
+      difficulty: "Easy",
+      description:
+        "JDK (Java Development Kit) contains everything needed to develop Java applications. JRE (Java Runtime Environment) provides libraries and JVM required to run Java programs. JVM (Java Virtual Machine) executes Java bytecode and provides platform independence.",
+
+      faqs: [
+        {
+          question: "Difference between JVM, JRE and JDK?",
+          answer:
+            "JVM executes bytecode. JRE contains JVM and libraries required to run Java applications. JDK contains JRE plus development tools like javac, debugger, and documentation generator."
+        },
+        {
+          question: "Can we run Java without JDK?",
+          answer:
+            "Yes. End users only need JRE to execute Java applications. Developers require JDK."
+        },
+        {
+          question: "What is the responsibility of JVM?",
+          answer:
+            "JVM loads classes, verifies bytecode, manages memory, performs garbage collection, executes bytecode, and ensures platform independence."
+        }
+      ]
+    },
+
+    {
+      id: "java-datatypes",
+      title: "Data Types",
+      difficulty: "Easy",
+      description:
+        "A data type specifies the type of value a variable can store. Java provides primitive data types and non-primitive (reference) data types.",
+
+      faqs: [
+        {
+          question: "How many primitive data types are there in Java?",
+          answer:
+            "There are eight primitive data types: byte, short, int, long, float, double, char, and boolean."
+        },
+        {
+          question: "Difference between primitive and non-primitive data types?",
+          answer:
+            "Primitive types store actual values and have fixed sizes. Non-primitive types store references to objects and can have methods and constructors."
+        },
+        {
+          question: "Default value of primitive data types?",
+          answer:
+            "byte, short, int = 0, long = 0L, float = 0.0f, double = 0.0, char = '\\u0000', boolean = false."
+        }
+      ]
+    },
+
+    {
+      id: "variables",
+      title: "Variables",
+      difficulty: "Easy",
+      description:
+        "A variable is a named memory location used to store data. Java supports local variables, instance variables, and static variables.",
+
+      faqs: [
+        {
+          question: "Types of variables in Java?",
+          answer:
+            "Local variables, Instance variables, and Static (Class) variables."
+        },
+        {
+          question: "Where are local variables stored?",
+          answer:
+            "Local variables are stored in the stack memory and exist only during method execution."
+        },
+        {
+          question: "Difference between instance and static variables?",
+          answer:
+            "Instance variables belong to an object, whereas static variables belong to the class and are shared among all objects."
+        }
+      ]
+    },
+
+    {
+      id: "operators",
+      title: "Operators",
+      difficulty: "Easy",
+      description:
+        "Operators are special symbols that perform operations on operands. Java provides arithmetic, relational, logical, assignment, bitwise, unary, ternary, and shift operators.",
+
+      faqs: [
+        {
+          question: "What is the difference between == and equals()?",
+          answer:
+            "== compares references for objects and values for primitives, whereas equals() compares object contents when overridden."
+        },
+        {
+          question: "What is the ternary operator?",
+          answer:
+            "The ternary operator (condition ? value1 : value2) is a shorthand for if-else."
+        },
+        {
+          question: "Difference between & and &&?",
+          answer:
+            "& always evaluates both operands, whereas && uses short-circuit evaluation and skips the second operand if the first is false."
+        }
+      ]
+    },
+
+    {
+      id: "constructors",
+      title: "Constructors",
+      difficulty: "Easy",
+      description:
+        "A constructor is a special method that initializes objects. It has the same name as the class and does not have any return type. Java supports default and parameterized constructors.",
+
+      faqs: [
+        {
+          question: "What is a constructor?",
+          answer:
+            "A constructor is a special method automatically invoked when an object is created to initialize the object's state."
+        },
+        {
+          question: "Can constructors be overloaded?",
+          answer:
+            "Yes. Java supports constructor overloading by defining multiple constructors with different parameter lists."
+        },
+        {
+          question: "Can a constructor be final, static or abstract?",
+          answer:
+            "No. Constructors cannot be final, static, or abstract because they are not inherited or overridden."
+        }
+        
+      ]
+      
+    },
+    {
+  id: "this-keyword",
+  title: "this Keyword",
+  difficulty: "Easy",
+  description:
+    "The 'this' keyword refers to the current object of a class. It is used to differentiate instance variables from local variables, invoke current class methods, invoke another constructor of the same class using this(), and pass the current object as an argument.",
+
+  faqs: [
+    {
+      question: "What is the purpose of the this keyword?",
+      answer:
+        "The this keyword refers to the current object and is used to access instance variables, methods, constructors, and the current object."
+    },
+    {
+      question: "Can we use this() and super() together in a constructor?",
+      answer:
+        "No. Both must be the first statement inside a constructor, so only one of them can be used."
+    },
+    {
+      question: "Can this keyword be used inside a static method?",
+      answer:
+        "No. Static methods belong to the class, not an object, so there is no current object."
+    }
+  ]
+},
+
+{
+  id: "super-keyword",
+  title: "super Keyword",
+  difficulty: "Easy",
+  description:
+    "The super keyword refers to the immediate parent class object. It is used to access parent class variables, invoke parent class methods, and call parent class constructors.",
+
+  faqs: [
+    {
+      question: "What is the difference between this and super?",
+      answer:
+        "this refers to the current class object, whereas super refers to the immediate parent class object."
+    },
+    {
+      question: "Why is super() used?",
+      answer:
+        "super() invokes the constructor of the parent class and helps initialize inherited members."
+    },
+    {
+      question: "Can super() be called multiple times inside a constructor?",
+      answer:
+        "No. It can only be called once and must be the first statement."
+    }
+  ]
+},
+
+{
+  id: "static-keyword",
+  title: "Static Keyword",
+  difficulty: "Easy",
+  description:
+    "The static keyword makes a member belong to the class instead of individual objects. Static members are created only once and shared among all objects of the class.",
+
+  faqs: [
+    {
+      question: "What can be declared static in Java?",
+      answer:
+        "Variables, methods, nested classes, and blocks can be declared static."
+    },
+    {
+      question: "Can a static method access non-static members?",
+      answer:
+        "No. A static method cannot directly access instance variables or instance methods because they belong to an object."
+    },
+    {
+      question: "Why is the main method static?",
+      answer:
+        "The JVM calls main() before creating any object, so it must be static."
+    }
+  ]
+},
+
+{
+  id: "final-keyword",
+  title: "Final Keyword",
+  difficulty: "Easy",
+  description:
+    "The final keyword is used to restrict modification. A final variable cannot be reassigned, a final method cannot be overridden, and a final class cannot be inherited.",
+
+  faqs: [
+    {
+      question: "What is the difference between final, finally, and finalize()?",
+      answer:
+        "final is a keyword, finally is an exception handling block, and finalize() is a garbage collection method."
+    },
+    {
+      question: "Can a final variable be initialized later?",
+      answer:
+        "Yes. A blank final variable can be initialized once inside a constructor."
+    },
+    {
+      question: "Why is String immutable if it's final?",
+      answer:
+        "String immutability is implemented internally. The final keyword only prevents inheritance of the String class."
+    }
+  ]
+},
+
+{
+  id: "oops",
+  title: "Object-Oriented Programming (OOP)",
+  description:
+    "Object-Oriented Programming organizes software around objects rather than functions. Java supports four major OOP principles: Encapsulation, Inheritance, Polymorphism, and Abstraction. OOP improves code reusability, maintainability, scalability, and modularity.",
+
+  faqs: [
+    {
+      question: "What are the four pillars of OOP?",
+      answer:
+        "Encapsulation, Inheritance, Polymorphism, and Abstraction."
+    },
+    {
+      question: "Why is Java called an object-oriented language?",
+      answer:
+        "Because Java models programs using classes and objects and supports all major OOP concepts."
+    },
+    {
+      question: "What are the advantages of OOP?",
+      answer:
+        "Code reuse, modularity, flexibility, maintainability, scalability, and easier testing."
+    }
+  ]
+},
+
+{
+  id: "encapsulation",
+  title: "Encapsulation",
+  description:
+    "Encapsulation is the process of binding data and methods together into a single unit (class) while hiding implementation details. It is achieved using private fields and public getter/setter methods.",
+
+  faqs: [
+    {
+      question: "How is encapsulation achieved in Java?",
+      answer:
+        "By declaring instance variables private and providing public getter and setter methods."
+    },
+    {
+      question: "Why is encapsulation important?",
+      answer:
+        "It protects data from unauthorized access, improves security, and makes code easier to maintain."
+    },
+    {
+      question: "Is encapsulation related to data hiding?",
+      answer:
+        "Yes. Data hiding is one of the primary benefits achieved through encapsulation."
+    }
+  ]
+},
+{
+  id: "inheritance",
+  title: "Inheritance",
+  difficulty: "Easy",
+  description:
+    "Inheritance is an OOP concept that allows one class to acquire the properties and methods of another class. The existing class is called the parent (superclass), and the new class is called the child (subclass). It promotes code reusability and establishes an 'is-a' relationship between classes. Java supports single, multilevel, and hierarchical inheritance through classes. Multiple inheritance is achieved using interfaces.",
+
+  faqs: [
+    {
+      question: "What is inheritance?",
+      answer:
+        "Inheritance allows one class to inherit the properties and methods of another class, promoting code reuse."
+    },
+    {
+      question: "Why doesn't Java support multiple inheritance with classes?",
+      answer:
+        "To avoid ambiguity and the Diamond Problem. Java supports multiple inheritance through interfaces."
+    },
+    {
+      question: "What are the types of inheritance in Java?",
+      answer:
+        "Single, Multilevel, Hierarchical, and Multiple (using interfaces)."
+    }
+  ]
+},
+
+{
+  id: "polymorphism",
+  title: "Polymorphism",
+  difficulty: "Medium",
+  description:
+    "Polymorphism means 'many forms'. It allows the same method or object to behave differently based on the context. Java supports Compile-time Polymorphism (Method Overloading) and Runtime Polymorphism (Method Overriding).",
+
+  faqs: [
+    {
+      question: "What is polymorphism?",
+      answer:
+        "Polymorphism allows the same interface or method name to perform different tasks depending on the object."
+    },
+    {
+      question: "What are the types of polymorphism?",
+      answer:
+        "Compile-time polymorphism (Method Overloading) and Runtime polymorphism (Method Overriding)."
+    },
+    {
+      question: "How is runtime polymorphism achieved?",
+      answer:
+        "Through method overriding and dynamic method dispatch."
+    }
+  ]
+},
+
+{
+  id: "abstraction",
+  title: "Abstraction",
+  difficulty: "Medium",
+  description:
+    "Abstraction is the process of hiding implementation details while showing only essential features to the user. In Java, abstraction is achieved using abstract classes and interfaces.",
+
+  faqs: [
+    {
+      question: "What is abstraction?",
+      answer:
+        "Abstraction hides implementation details and exposes only the required functionality."
+    },
+    {
+      question: "How can abstraction be achieved in Java?",
+      answer:
+        "Using abstract classes and interfaces."
+    },
+    {
+      question: "Why is abstraction important?",
+      answer:
+        "It reduces complexity, improves maintainability, and provides better security."
+    }
+  ]
+},
+
+{
+  id: "interfaces",
+  title: "Interfaces",
+  difficulty: "Medium",
+  description:
+    "An interface defines a contract that implementing classes must follow. It supports abstraction and multiple inheritance in Java. Since Java 8, interfaces can contain default and static methods, and since Java 9, private methods.",
+
+  faqs: [
+    {
+      question: "What is an interface?",
+      answer:
+        "An interface is a blueprint containing abstract methods that implementing classes must define."
+    },
+    {
+      question: "Difference between interface and abstract class?",
+      answer:
+        "Interfaces provide complete abstraction and support multiple inheritance, whereas abstract classes can have both abstract and concrete methods."
+    },
+    {
+      question: "Can an interface have methods with implementation?",
+      answer:
+        "Yes. Java 8 introduced default and static methods, and Java 9 introduced private methods."
+    }
+  ]
+},
+
+{
+  id: "method-overloading",
+  title: "Method Overloading",
+  difficulty: "Easy",
+  description:
+    "Method overloading means defining multiple methods with the same name but different parameter lists within the same class. It is an example of compile-time polymorphism.",
+
+  faqs: [
+    {
+      question: "What is method overloading?",
+      answer:
+        "Having multiple methods with the same name but different parameter lists."
+    },
+    {
+      question: "Can methods be overloaded by changing only the return type?",
+      answer:
+        "No. Return type alone cannot distinguish overloaded methods."
+    },
+    {
+      question: "Is method overloading compile-time or runtime polymorphism?",
+      answer:
+        "Compile-time polymorphism."
+    }
+  ]
+},
+
+{
+  id: "method-overriding",
+  title: "Method Overriding",
+  difficulty: "Medium",
+  description:
+    "Method overriding occurs when a child class provides its own implementation of a method already defined in its parent class. It enables runtime polymorphism.",
+
+  faqs: [
+    {
+      question: "What is method overriding?",
+      answer:
+        "Redefining a superclass method in the child class with the same signature."
+    },
+    {
+      question: "Can static methods be overridden?",
+      answer:
+        "No. Static methods are hidden, not overridden."
+    },
+    {
+      question: "Can final methods be overridden?",
+      answer:
+        "No. Final methods cannot be overridden."
+    }
+  ]
+},
+  ]
+},
+
+
+  python: {
+    name: 'Python',
+    subtitle: 'High-Level Dynamic Scripting',
+    paradigm: 'Object-Oriented / Procedural',
+    typing: 'Strong / Dynamic',
+    topics: [
+      {
+        id: 'py-basics',
+        title: 'Lists, Tuples & Dicts',
+        difficulty: 'Easy',
+        description: 'Python features three essential built-in collections for data manipulation.',
+        code: `# List (mutable)\nitems = ["apple", "banana"]\nitems.append("cherry")\n\n# Tuple (immutable)\ncoordinates = (34.05, -118.24)\n\n# Dictionary\nuser_info = {"username": "sde_prep", "xp": 450}`,
+        faqs: [
+          {
+            question: 'What is the difference between a list and a tuple?',
+            answer: 'Lists are mutable, tuples are immutable.'
+          }
+        ]
+      }
+      // Add more Python topics as needed
+    ]
+  },
+  // Add the rest of your languages (java, cpp, c, html, sql) here with their full topics...
+  // For brevity in this response, I'm showing the structure. Paste your full objects from the first message.
 };
 
 export default function CodingPracticePage() {
-  const { profile, refreshProfile } = useAuth();
-  const [localProblems, setLocalProblems] = useState(problems);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTopic, setSelectedTopic] = useState('All');
-  const [selectedDifficulty, setSelectedDifficulty] = useState(null);
-  const [selectedProblem, setSelectedProblem] = useState(null);
+  const [selectedLangId, setSelectedLangId] = useState('react');
+  const [selectedTopicIndex, setSelectedTopicIndex] = useState(0);
+  const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
+  const [copiedCode, setCopiedCode] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!selectedProblem) return;
-    try {
-      await api.post('/users/profile/problem');
-      await refreshProfile();
-      
-      setLocalProblems(prev => prev.map(p => p.id === selectedProblem.id ? { ...p, solved: true } : p));
-      setSelectedProblem(prev => ({ ...prev, solved: true }));
-      
-      alert('Code submitted successfully! +50 XP!');
-    } catch (err) {
-      console.error('Error submitting code:', err);
-      alert('Failed to submit code. Please try again.');
+  const selectedLang = tutorialsData[selectedLangId] || tutorialsData.react;
+  const topics = selectedLang?.topics || [];
+  const currentTopic = topics[selectedTopicIndex] || {
+    title: 'No Content Available',
+    description: 'Please select a different topic or language.',
+    code: '',
+    faqs: []
+  };
+
+  const handleCopy = (code) => {
+    if (!code) return;
+    navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 1800);
+  };
+
+  const handleNext = () => {
+    if (selectedTopicIndex < topics.length - 1) {
+      setSelectedTopicIndex(prev => prev + 1);
+      setExpandedFaqIndex(null);
     }
   };
 
-  const filtered = localProblems.filter((p) => {
-    const matchSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchTopic = selectedTopic === 'All' || p.topic === selectedTopic;
-    const matchDifficulty = !selectedDifficulty || p.difficulty === selectedDifficulty;
-    return matchSearch && matchTopic && matchDifficulty;
-  });
+  const handlePrev = () => {
+    if (selectedTopicIndex > 0) {
+      setSelectedTopicIndex(prev => prev - 1);
+      setExpandedFaqIndex(null);
+    }
+  };
 
-  const currentStreak = profile?.current_streak ?? 0;
-  const dbProblemsSolved = profile?.problems_solved ?? 0;
-  const acceptanceRate = profile?.acceptance_rate ?? 0;
-  const avgSolveTime = profile?.avg_solve_time ?? 0;
+  const toggleFaq = (idx) => {
+    setExpandedFaqIndex(expandedFaqIndex === idx ? null : idx);
+  };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white mb-2">Coding Practice</h1>
-        <p className="text-slate-400">
-          Sharpen your problem-solving skills with curated challenges.
-        </p>
+    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
+      <div className="flex items-center gap-3 mb-2">
+        <BookOpen className="w-8 h-8 text-[#d4684b]" />
+        <h1 className="text-3xl font-bold text-white">Documentation & Interview Prep</h1>
+      </div>
+      <p className="text-slate-400 mb-8">High-quality tutorials with code examples and interview questions.</p>
+
+      {/* Language Tabs */}
+      <div className="flex flex-wrap gap-2 mb-8 border-b border-white/10 pb-4">
+        {Object.keys(tutorialsData).map((key) => (
+          <button
+            key={key}
+            onClick={() => {
+              setSelectedLangId(key);
+              setSelectedTopicIndex(0);
+              setExpandedFaqIndex(null);
+            }}
+            className={`px-5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+              key === selectedLangId
+                ? 'bg-gradient-to-r from-[#d4684b] to-[#e88d72] text-white shadow-lg'
+                : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/10'
+            }`}
+          >
+            {tutorialsData[key].name}
+          </button>
+        ))}
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          icon={CheckCircle2}
-          label="Problems Solved"
-          value={String(dbProblemsSolved)}
-          iconColor="text-emerald-400"
-          iconBg="bg-emerald-500/10"
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Acceptance Rate"
-          value={`${acceptanceRate}%`}
-          iconColor="text-[#d4684b]"
-          iconBg="bg-[#d4684b]/10"
-        />
-        <StatCard
-          icon={Clock}
-          label="Avg. Solve Time"
-          value={`${avgSolveTime} min`}
-          iconColor="text-[#e88d72]"
-          iconBg="bg-[#e88d72]/10"
-        />
-        <StatCard
-          icon={BarChart3}
-          label="Current Streak"
-          value={`${currentStreak} days`}
-          iconColor="text-amber-400"
-          iconBg="bg-amber-500/10"
-        />
-      </div>
-
-      {/* Search & Filters */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-            <input
-              type="text"
-              placeholder="Search problems..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field pl-11"
-            />
-          </div>
-          <div className="flex gap-2">
-            {['Easy', 'Medium', 'Hard'].map((diff) => (
-              <button
-                key={diff}
-                onClick={() =>
-                  setSelectedDifficulty(selectedDifficulty === diff ? null : diff)
-                }
-                className={`px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                  selectedDifficulty === diff
-                    ? diff === 'Easy'
-                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                      : diff === 'Medium'
-                      ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                      : 'bg-red-500/15 text-red-400 border border-red-500/30'
-                    : 'glass text-slate-400 hover:text-white'
-                }`}
-              >
-                {diff}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Topic Pills */}
-        <div className="flex flex-wrap gap-2">
-          {topics.map((topic) => (
-            <button
-              key={topic}
-              onClick={() => setSelectedTopic(topic)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                selectedTopic === topic
-                  ? 'bg-[#d4684b]/15 text-[#d4684b] border border-[#d4684b]/30'
-                  : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
-              }`}
-            >
-              {topic}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Problem List & Detail */}
-      <div className="grid lg:grid-cols-5 gap-6">
-        {/* Problem List */}
-        <div className="lg:col-span-3 space-y-2">
-          {filtered.map((problem, index) => (
-            <motion.button
-              key={problem.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.03 }}
-              onClick={() => setSelectedProblem(problem)}
-              className={`w-full glass p-4 flex items-center gap-4 text-left transition-all duration-200 ${
-                selectedProblem?.id === problem.id
-                  ? 'border-[#d4684b]/30 bg-[#d4684b]/5'
-                  : 'hover:border-white/10'
-              }`}
-            >
-              <div className="flex-shrink-0">
-                {problem.solved ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                ) : (
-                  <Circle className="w-5 h-5 text-slate-600" />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-600 font-mono">#{problem.id}</span>
-                  <span className="text-sm font-medium text-white truncate">
-                    {problem.title}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-slate-500">{problem.topic}</span>
-                  <span className="text-xs text-slate-700">•</span>
-                  <span className="text-xs text-slate-500">{problem.acceptance}</span>
-                </div>
-              </div>
-              <Badge size="sm" color={difficultyColor[problem.difficulty]}>
-                {problem.difficulty}
-              </Badge>
-            </motion.button>
-          ))}
-
-          {filtered.length === 0 && (
-            <div className="glass p-10 text-center">
-              <Code2 className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400">No problems match your filters.</p>
+      <div className="grid lg:grid-cols-12 gap-8">
+        {/* Sidebar */}
+        <div className="lg:col-span-4 xl:col-span-3">
+          <div className="glass p-6 rounded-3xl sticky top-6">
+            <h3 className="uppercase text-xs font-bold tracking-widest text-slate-400 mb-5">TOPICS</h3>
+            <div className="space-y-1 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+              {topics.length > 0 ? (
+                topics.map((topic, index) => (
+                  <button
+                    key={index}
+                    onClick={() => { setSelectedTopicIndex(index); setExpandedFaqIndex(null); }}
+                    className={`w-full text-left px-4 py-3 rounded-2xl text-sm transition-all ${
+                      index === selectedTopicIndex ? 'bg-white/10 border-l-4 border-[#d4684b] text-white' : 'hover:bg-white/5 text-slate-400'
+                    }`}
+                  >
+                    <span className="line-clamp-2">{topic.title}</span>
+                  </button>
+                ))
+              ) : (
+                <p className="text-slate-500 py-8 text-center">No topics available</p>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Problem Detail / Code Editor Area */}
-        <div className="lg:col-span-2">
-          {selectedProblem ? (
-            <motion.div
-              key={selectedProblem.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="glass p-6 sticky top-24 space-y-5"
-            >
-              <div className="flex items-center justify-between">
-                <Badge size="md" color={difficultyColor[selectedProblem.difficulty]}>
-                  {selectedProblem.difficulty}
-                </Badge>
-                <button className="p-1.5 rounded-lg text-slate-500 hover:text-amber-400 transition-colors">
-                  <Bookmark className="w-4 h-4" />
-                </button>
-              </div>
+        {/* Main Content */}
+        <div className="lg:col-span-8 xl:col-span-9 space-y-8">
+          <motion.div
+            key={`${selectedLangId}-${selectedTopicIndex}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass p-8 md:p-10 rounded-3xl"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">{currentTopic.title}</h2>
+            <p className="text-slate-300 leading-relaxed mb-10">{currentTopic.description}</p>
 
+            {currentTopic.code && (
               <div>
-                <h2 className="text-xl font-bold text-white mb-1">
-                  {selectedProblem.title}
-                </h2>
-                <p className="text-sm text-slate-500">{selectedProblem.topic}</p>
-              </div>
-
-              <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
-                <p>
-                  Given an array of integers <code className="px-1.5 py-0.5 rounded bg-white/5 text-[#d4684b] text-xs">nums</code> and 
-                  an integer <code className="px-1.5 py-0.5 rounded bg-white/5 text-[#d4684b] text-xs">target</code>, return 
-                  indices of the two numbers such that they add up to target.
-                </p>
-                <p>
-                  You may assume that each input would have exactly one solution, and you 
-                  may not use the same element twice.
-                </p>
-              </div>
-
-              {/* Example */}
-              <div className="rounded-xl bg-navy-950/60 border border-white/5 p-4">
-                <p className="text-xs text-slate-500 mb-2">Example:</p>
-                <pre className="text-xs text-slate-300 font-mono overflow-x-auto">
-{`Input: nums = [2,7,11,15], target = 9
-Output: [0,1]
-Explanation: nums[0] + nums[1] == 9`}
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-slate-400 flex items-center gap-2">
+                    <Code2 className="w-5 h-5" /> Code Example
+                  </span>
+                  <button onClick={() => handleCopy(currentTopic.code)} className="flex items-center gap-2 text-sm text-slate-400 hover:text-white">
+                    {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    {copiedCode ? 'Copied!' : 'Copy Code'}
+                  </button>
+                </div>
+                <pre className="bg-[#0a0a0a] p-6 md:p-8 rounded-2xl overflow-x-auto text-sm font-mono text-slate-300 border border-white/10">
+                  <code>{currentTopic.code}</code>
                 </pre>
               </div>
+            )}
 
-              {/* Code Editor Placeholder */}
-              <div className="rounded-xl bg-navy-950/80 border border-white/5 overflow-hidden">
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/5">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
-                  </div>
-                  <span className="text-xs text-slate-500 ml-2">solution.js</span>
-                </div>
-                <textarea
-                  placeholder="// Write your solution here..."
-                  className="w-full h-48 bg-transparent text-sm text-slate-300 font-mono p-4 outline-none resize-none placeholder-slate-700"
-                  defaultValue={`function twoSum(nums, target) {\n  // Your code here\n  \n}`}
-                />
-              </div>
+            <div className="flex justify-between mt-12 pt-6 border-t border-white/10">
+              <button onClick={handlePrev} disabled={selectedTopicIndex === 0} className="flex items-center gap-2 disabled:opacity-40 text-slate-400 hover:text-white">
+                <ChevronLeft className="w-4 h-4" /> Previous
+              </button>
+              <button onClick={handleNext} disabled={selectedTopicIndex === topics.length - 1} className="flex items-center gap-2 disabled:opacity-40 text-slate-400 hover:text-white">
+                Next <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </motion.div>
 
-              <div className="flex gap-3">
-                <button className="btn-primary flex-1 text-sm py-2.5">
-                  Run Code
-                </button>
-                <button className="btn-secondary flex-1 text-sm py-2.5" onClick={handleSubmit}>
-                  Submit
-                </button>
+          {/* Interview Questions */}
+          {currentTopic.faqs && currentTopic.faqs.length > 0 && (
+            <div className="glass p-8 md:p-10 rounded-3xl">
+              <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
+                <Lightbulb className="text-amber-400 w-6 h-6" /> Interview Questions
+              </h3>
+              <div className="space-y-4">
+                {currentTopic.faqs.map((faq, idx) => {
+                  const isExpanded = expandedFaqIndex === idx;
+                  return (
+                    <div key={idx} className="border border-white/10 rounded-2xl bg-white/[0.015]">
+                      <button
+                        onClick={() => toggleFaq(idx)}
+                        className="w-full px-6 py-5 text-left flex justify-between items-center hover:bg-white/5"
+                      >
+                        <span className="text-slate-200">{faq.question}</span>
+                        <ChevronDown className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                      </button>
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
+                            <div className="px-6 pb-6 text-slate-400 border-t border-white/10 pt-4">
+                              {faq.answer}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
-            </motion.div>
-          ) : (
-            <div className="glass p-10 text-center sticky top-24">
-              <Code2 className="w-12 h-12 text-slate-700 mx-auto mb-3" />
-              <p className="text-sm text-slate-500">Select a problem to view details</p>
             </div>
           )}
         </div>

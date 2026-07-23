@@ -1,410 +1,484 @@
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
-  Mic,
-  Code2,
-  FileText,
-  Map,
-  BarChart3,
-  Brain,
   ArrowRight,
-  Star,
-  Users,
+  Play,
+  Brain,
+  BookOpen,
+  FileText,
   Trophy,
-  Zap,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
+  Sparkles,
+  ChevronDown
 } from 'lucide-react';
+
 import Button from '../components/ui/Button';
-import FeatureCard from '../components/FeatureCard';
-
-// Animated counter hook
-function useCounter(end, duration = 2000) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (!isInView) return;
-    let start = 0;
-    const step = end / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [isInView, end, duration]);
-
-  return [count, ref];
-}
 
 const features = [
   {
-    icon: Mic,
+    icon: Brain,
     title: 'AI Mock Interviews',
-    description: 'Practice with AI interviewers that simulate real technical, behavioral, and HR interview rounds with instant feedback.',
-    color: 'blue',
+    description:
+      'Experience realistic HR, DSA, System Design and Behavioral interviews powered by AI.',
   },
   {
-    icon: Code2,
-    title: 'Coding Practice',
-    description: 'Solve 500+ curated coding problems across all difficulty levels with real-time code execution and hints.',
-    color: 'emerald',
+    icon: BookOpen,
+    title: 'Language Documentation',
+    description:
+      'Study core concepts, cheatsheets, and top interview questions for 7 key languages.',
   },
   {
     icon: FileText,
     title: 'Resume Analyzer',
-    description: 'Upload your resume and get AI-powered analysis with section-by-section scoring and actionable improvement tips.',
-    color: 'purple',
+    description:
+      'Upload your resume and receive ATS score with AI suggestions.',
   },
   {
-    icon: Map,
-    title: 'Learning Roadmaps',
-    description: 'Personalized study plans based on your target role, current skills, and timeline to interview day.',
-    color: 'amber',
-  },
-  {
-    icon: BarChart3,
-    title: 'Performance Analytics',
-    description: 'Track your progress with detailed insights, skill radar charts, and comparison against target benchmarks.',
-    color: 'cyan',
-  },
-  {
-    icon: Brain,
-    title: 'Adaptive AI Engine',
-    description: 'Our AI adapts to your skill level in real-time, progressively challenging you as you improve.',
-    color: 'pink',
-  },
-];
-
-const testimonials = [
-  {
-    name: 'Arjun Patel',
-    role: 'SDE at Google',
-    text: 'Intervo\'s mock interviews felt incredibly real. The AI feedback on my system design answers was spot-on. Landed my dream job!',
-    rating: 5,
-  },
-  {
-    name: 'Priya Sharma',
-    role: 'Frontend Dev at Microsoft',
-    text: 'The coding practice section is phenomenal. The difficulty progression and hints helped me go from struggling with mediums to crushing hards.',
-    rating: 5,
-  },
-  {
-    name: 'Rahul Menon',
-    role: 'SDE II at Amazon',
-    text: 'The resume analyzer caught issues I never noticed. My callback rate went from 10% to over 60% after implementing the suggestions.',
-    rating: 5,
-  },
-];
-
-const steps = [
-  {
-    step: '01',
-    title: 'Create Your Profile',
-    description: 'Sign up and tell us about your target role, skills, and timeline.',
-  },
-  {
-    step: '02',
-    title: 'Get Your Roadmap',
-    description: 'Receive a personalized study plan tailored to your goals.',
-  },
-  {
-    step: '03',
-    title: 'Practice Daily',
-    description: 'Take mock interviews, solve coding problems, and refine your resume.',
-  },
-  {
-    step: '04',
-    title: 'Land Your Dream Job',
-    description: 'Go into your real interviews with confidence and proven skills.',
+    icon: Trophy,
+    title: 'Placement Roadmaps',
+    description:
+      'Follow personalized preparation roadmaps designed for your target company.',
   },
 ];
 
 export default function LandingPage() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [usersCount, usersRef] = useCounter(12500);
-  const [interviewsCount, interviewsRef] = useCounter(85000);
-  const [placementRate, placementRef] = useCounter(94);
-  const [problemsCount, problemsRef] = useCounter(500);
-
   return (
-    <div className="overflow-hidden">
-      {/* ─── Hero Section ────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-hero-pattern" />
-        <div className="bg-orb w-[600px] h-[600px] bg-accent-blue top-1/4 -left-32" />
-        <div className="bg-orb w-[500px] h-[500px] bg-accent-purple bottom-1/4 -right-32" />
-        <div className="absolute inset-0 bg-grid opacity-30" />
+    <div className="relative overflow-hidden bg-navy-950 text-white min-h-screen">
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+      {/* ================= BACKGROUND ================= */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          animate={{
+            x: [0, 80, 0],
+            y: [0, -60, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+          className="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-[#d4684b]/10 blur-[130px]"
+        />
+
+        <motion.div
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 60, 0],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+          className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-[#e88d72]/10 blur-[130px]"
+        />
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      </div>
+
+      {/* ================= NAVBAR ================= */}
+      <header className="fixed top-0 z-50 w-full border-b border-white/5 backdrop-blur-xl bg-navy-950/80">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+          <Link
+            to="/"
+            className="text-2xl font-bold tracking-tight text-white flex items-center gap-2 group"
+          >
+            <div className="w-8 h-8 rounded-xl bg-gradient-accent flex items-center justify-center">
+              <BookOpen className="w-4 h-4 text-white" />
+            </div>
+            <span>
+              Inter<span className="gradient-text">vo</span>
+            </span>
+          </Link>
+
+          <nav className="hidden gap-10 text-sm font-medium text-slate-400 lg:flex">
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Link to="/login">
+              <Button variant="secondary" size="sm">
+                Login
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button
+                variant="primary"
+                size="sm"
+                icon={ArrowRight}
+              >
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* ================= HERO ================= */}
+      <section className="relative flex min-h-screen items-center justify-center px-6 pt-20">
+        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center justify-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            className="flex flex-col items-center"
           >
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#d4684b]/30 bg-[#d4684b]/10 px-4 py-2 text-sm text-[#d4684b]">
+              <Sparkles className="h-4 w-4" />
+              AI Powered Placement Preparation Platform
+            </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
-              Ace your next
+            <h1 className="text-4xl font-black leading-tight sm:text-6xl lg:text-7xl text-white">
+              Crack Your
               <br />
-              <span className="gradient-text">tech interview</span>
+              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
+                Dream Tech Job
+              </span>
+              <br />
+              with AI
             </h1>
 
-            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Practice with AI-powered mock interviews, sharpen your coding skills, 
-              and get personalized feedback to land your dream tech job.
+            <p className="mt-8 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-400">
+              Practice realistic AI interviews, study language documentation,
+              analyze your resume, and track everything from one beautiful, unified dashboard.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link to="/signup">
-                <Button variant="primary" size="lg" icon={ArrowRight}>
-                  Start Practicing Free
+                <Button
+                  size="lg"
+                  variant="primary"
+                  icon={ArrowRight}
+                >
+                  Start Preparing Free
                 </Button>
               </Link>
               <a href="#features">
-                <Button variant="secondary" size="lg">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                >
                   See How It Works
                 </Button>
               </a>
             </div>
-          </motion.div>
 
-          {/* Floating stats preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4"
-          >
-            {[
-              { label: 'Active Users', value: usersCount.toLocaleString() + '+', ref: usersRef, icon: Users },
-              { label: 'Mock Interviews', value: interviewsCount.toLocaleString() + '+', ref: interviewsRef, icon: Mic },
-              { label: 'Placement Rate', value: placementRate + '%', ref: placementRef, icon: Trophy },
-              { label: 'Coding Problems', value: problemsCount + '+', ref: problemsRef, icon: Code2 },
-            ].map((stat, i) => (
-              <div
-                key={i}
-                ref={stat.ref}
-                className="glass p-4 text-center"
-              >
-                <stat.icon className="w-5 h-5 text-blue-400 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-slate-500 mt-1">{stat.label}</p>
+            <div className="mt-12 flex flex-wrap justify-center gap-8 text-sm text-slate-500">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <span>No Credit Card Required</span>
               </div>
-            ))}
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <span>Free Forever Plan Available</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <span>100% Secure & Private</span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── Features Section ────────────────────────────────── */}
-      <section id="features" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Everything you need to <span className="gradient-text">crack the interview</span>
+      {/* ================= FEATURES ================= */}
+      <section
+        id="features"
+        className="py-24 border-t border-white/5 bg-white/[0.01]"
+      >
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-20 text-center">
+            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
+              Features
+            </span>
+            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
+              Everything You Need
+              <br />
+              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
+                To Crack Interviews
+              </span>
             </h2>
-            <p className="text-slate-400 max-w-xl mx-auto">
-              A complete toolkit designed to prepare you for every aspect of the interview process.
+            <p className="mx-auto mt-6 max-w-2xl text-base text-slate-400">
+              One platform for language documentation, AI mock interviews,
+              resume analysis, and personalized learning roadmaps.
             </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {features.map((feature, index) => (
-              <FeatureCard key={index} {...feature} index={index} />
-            ))}
           </div>
-        </div>
-      </section>
 
-      {/* ─── How It Works Section ────────────────────────────── */}
-      <section id="how-it-works" className="py-24 px-6 relative">
-        <div className="bg-orb w-96 h-96 bg-accent-purple top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-        <div className="max-w-5xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              How <span className="gradient-text">Intervo</span> works
-            </h2>
-            <p className="text-slate-400 max-w-xl mx-auto">
-              Four simple steps to go from preparation to placement.
-            </p>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {steps.map((item, index) => (
+          <div className="grid gap-6 md:grid-cols-2">
+            {features.map((feature, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                className="relative group"
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.5,
+                }}
+                whileHover={{
+                  y: -5,
+                }}
+                className="group relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-xl transition-all"
               >
-                <div className="glass p-6 h-full">
-                  <span className="text-3xl font-bold gradient-text opacity-50 block mb-3">
-                    {item.step}
-                  </span>
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-400">{item.description}</p>
-                </div>
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 text-slate-700">
-                    <ArrowRight className="w-5 h-5" />
+                <div className="relative z-10">
+                  <div className="mb-6 inline-flex rounded-2xl bg-[#d4684b]/10 p-4 text-[#d4684b] group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="h-6 w-6" />
                   </div>
-                )}
+                  <h3 className="mb-3 text-xl font-bold text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-slate-400">
+                    {feature.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── Testimonials Section ────────────────────────────── */}
-      <section id="testimonials" className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Loved by <span className="gradient-text">thousands</span> of students
+      {/* ================= AI WORKFLOW ================= */}
+      <section className="relative py-28 border-t border-white/5 bg-navy-950">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-20 text-center">
+            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
+              Workflow
+            </span>
+            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
+              Prepare Smarter
+              <br />
+              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
+                With AI Guidance
+              </span>
             </h2>
-            <p className="text-slate-400">
-              See what our users say about their interview preparation journey.
-            </p>
-          </motion.div>
+          </div>
 
-          <div className="relative">
-            <motion.div
-              key={currentTestimonial}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              className="glass p-8 sm:p-10 text-center"
-            >
-              <div className="flex items-center justify-center gap-1 mb-6">
-                {Array.from({ length: testimonials[currentTestimonial].rating }).map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-lg sm:text-xl text-slate-200 leading-relaxed mb-8 italic">
-                &ldquo;{testimonials[currentTestimonial].text}&rdquo;
-              </p>
-              <div>
-                <p className="font-semibold text-white">{testimonials[currentTestimonial].name}</p>
-                <p className="text-sm text-slate-400">{testimonials[currentTestimonial].role}</p>
-              </div>
-            </motion.div>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-center gap-4 mt-8">
-              <button
-                onClick={() =>
-                  setCurrentTestimonial((prev) =>
-                    prev === 0 ? testimonials.length - 1 : prev - 1
-                  )
-                }
-                className="p-2 rounded-full glass hover:bg-white/5 transition-colors"
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                title: 'Upload Resume',
+                desc: 'AI analyzes your resume and identifies weak sections.',
+                step: '01'
+              },
+              {
+                title: 'Receive Roadmap',
+                desc: 'Get a personalized preparation roadmap based on your target company.',
+                step: '02'
+              },
+              {
+                title: 'Practice Daily',
+                desc: 'Solve coding problems, aptitude tests and mock interviews.',
+                step: '03'
+              },
+              {
+                title: 'Track Progress',
+                desc: 'Monitor your strengths, weaknesses and interview readiness.',
+                step: '04'
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className="rounded-3xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl relative"
               >
-                <ChevronLeft className="w-5 h-5 text-slate-400" />
-              </button>
-              <div className="flex gap-2">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentTestimonial(i)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentTestimonial
-                        ? 'w-6 bg-blue-500'
-                        : 'bg-slate-600 hover:bg-slate-500'
-                    }`}
-                  />
-                ))}
-              </div>
-              <button
-                onClick={() =>
-                  setCurrentTestimonial((prev) =>
-                    prev === testimonials.length - 1 ? 0 : prev + 1
-                  )
-                }
-                className="p-2 rounded-full glass hover:bg-white/5 transition-colors"
-              >
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </button>
-            </div>
+                <span className="text-3xl font-black text-[#d4684b]/20 absolute top-4 right-4">{item.step}</span>
+                <h3 className="mb-3 text-lg font-bold text-white mt-4">
+                  {item.title}
+                </h3>
+                <p className="text-xs leading-relaxed text-slate-400">
+                  {item.desc}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ─── CTA Section ─────────────────────────────────────── */}
-      <section className="py-24 px-6">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="gradient-border p-10 sm:p-14 text-center relative overflow-hidden"
-          >
-            <div className="bg-orb w-64 h-64 bg-accent-blue -top-32 -right-32 opacity-20" />
-            <div className="relative z-10">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-                Ready to start your journey?
-              </h2>
-              <p className="text-slate-400 mb-8 max-w-lg mx-auto">
-                Join thousands of students who've already landed their dream tech jobs with Intervo.
-              </p>
-              <Link to="/signup">
-                <Button variant="primary" size="lg" icon={ArrowRight}>
-                  Get Started for Free
+      {/* ================= PRICING ================= */}
+      <section
+        id="pricing"
+        className="py-28 border-t border-white/5 bg-white/[0.01]"
+      >
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-20 text-center">
+            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
+              Pricing
+            </span>
+            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
+              Choose Your
+              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
+                {' '}Plan
+              </span>
+            </h2>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-2 max-w-4xl mx-auto">
+            {/* Free Plan */}
+            <div className="rounded-3xl border border-white/5 bg-white/[0.02] p-8 flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-white">Free</h3>
+                <p className="mt-2 text-xs text-slate-400">Perfect for getting started.</p>
+                <h2 className="my-6 text-4xl font-black text-white">₹0</h2>
+                <ul className="space-y-4 text-xs text-slate-300">
+                  <li className="flex items-center gap-2">✓ 5 AI Mock Interviews</li>
+                  <li className="flex items-center gap-2">✓ Basic Resume Analysis</li>
+                  <li className="flex items-center gap-2">✓ Syntax & Concept Guides</li>
+                  <li className="flex items-center gap-2">✓ Core Study Roadmaps</li>
+                </ul>
+              </div>
+              <Link to="/signup" className="mt-8">
+                <Button className="w-full" variant="secondary">
+                  Get Started
                 </Button>
               </Link>
             </div>
-          </motion.div>
+
+            {/* Pro Plan */}
+            <div className="relative overflow-hidden rounded-3xl border border-[#d4684b]/50 bg-gradient-to-br from-[#d4684b]/10 to-[#e88d72]/10 p-8 flex flex-col justify-between shadow-[0_0_30px_rgba(212,104,75,0.1)]">
+              <div className="absolute right-5 top-5 rounded-full bg-[#d4684b] px-3 py-1 text-[10px] font-bold text-white">
+                POPULAR
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white">Pro</h3>
+                <p className="mt-2 text-xs text-slate-300">Unlimited AI powered preparation.</p>
+                <h2 className="my-6 text-4xl font-black text-white">
+                  ₹499
+                  <span className="text-sm font-normal text-slate-400">/month</span>
+                </h2>
+                <ul className="space-y-4 text-xs text-slate-200">
+                  <li className="flex items-center gap-2">✓ Unlimited AI Mock Interviews</li>
+                  <li className="flex items-center gap-2">✓ Unlimited Detailed Resume Reviews</li>
+                  <li className="flex items-center gap-2">✓ Unlimited Company-Specific Roadmaps</li>
+                  <li className="flex items-center gap-2">✓ Advanced Concept & Prep Libraries</li>
+                  <li className="flex items-center gap-2">✓ In-Depth Performance Analytics</li>
+                </ul>
+              </div>
+              <Link to="/signup" className="mt-8">
+                <Button className="w-full" variant="primary">
+                  Upgrade Now
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ─── Footer ──────────────────────────────────────────── */}
-      <footer className="border-t border-white/5 py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-accent flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white">
-                Inter<span className="gradient-text">vo</span>
+      {/* ================= FAQ ================= */}
+      <section
+        id="faq"
+        className="py-28 border-t border-white/5 bg-navy-950"
+      >
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="mb-16 text-center">
+            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
+              FAQ
+            </span>
+            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
+              Frequently Asked
+              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
+                {' '}Questions
               </span>
-            </div>
-            <div className="flex items-center gap-6 text-sm text-slate-500">
-              <a href="#" className="hover:text-white transition-colors">About</a>
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
-            </div>
-            <p className="text-xs text-slate-600">
-              © 2026 Intervo. All rights reserved.
-            </p>
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: 'Is Intervo free to use?',
+                a: 'Yes. You can start with our free plan and upgrade anytime for advanced features.',
+              },
+              {
+                q: 'Which programming languages are supported?',
+                a: 'Java, C++, Python, C, HTML, SQL, React and many more in our Syntax Guides.',
+              },
+              {
+                q: 'Are AI interviews realistic?',
+                a: 'Yes. They simulate real technical, HR and behavioral interviews, complete with comprehensive scoring metrics.',
+              },
+              {
+                q: 'Can I track my progress?',
+                a: 'Yes. Intervo provides detailed stats dashboard containing resume ratings and interview reports.',
+              },
+            ].map((faq, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border border-white/5 bg-white/[0.01] p-6"
+              >
+                <h3 className="mb-3 text-lg font-semibold text-white">
+                  {faq.q}
+                </h3>
+                <p className="text-sm leading-relaxed text-slate-400">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
+
+      {/* ================= CTA ================= */}
+      <section className="py-24 border-t border-white/5 bg-white/[0.01]">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="overflow-hidden rounded-[32px] border border-[#d4684b]/20 bg-gradient-to-br from-[#d4684b]/10 via-navy-950 to-[#e88d72]/10 p-12 text-center shadow-[0_0_40px_rgba(212,104,75,0.05)]">
+            <h2 className="text-3xl sm:text-5xl font-black text-white">
+              Ready To Land Your
+              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
+                {' '}Dream Job?
+              </span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-slate-300">
+              Join students preparing smarter with AI. Practice interviews, study documentation,
+              optimize your resume, and get placement ready.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link to="/signup">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  icon={ArrowRight}
+                >
+                  Get Started Free
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= FOOTER ================= */}
+      <footer className="border-t border-white/5 py-12 bg-navy-950">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
+          <div>
+            <h2 className="text-2xl font-black text-white flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-gradient-accent flex items-center justify-center">
+                <BookOpen className="w-4 h-4 text-white" />
+              </div>
+              <span>
+                Inter<span className="gradient-text">vo</span>
+              </span>
+            </h2>
+            <p className="mt-2 text-xs text-slate-500">
+              AI Powered Placement Preparation Platform
+            </p>
+          </div>
+
+          <div className="flex gap-6 text-xs text-slate-400">
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+            <Link to="/login" className="hover:text-white transition-colors">Login</Link>
+          </div>
+        </div>
+        <div className="mt-10 border-t border-white/5 pt-8 text-center text-xs text-slate-500">
+          © {new Date().getFullYear()} Intervo. All Rights Reserved.
+        </div>
       </footer>
+
     </div>
   );
 }

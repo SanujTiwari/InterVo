@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Sparkles } from 'lucide-react';
+import { Mail, Lock, BookOpen } from 'lucide-react';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
@@ -35,7 +35,7 @@ export default function LoginPage() {
       });
       window.google.accounts.id.renderButton(
         document.getElementById('google-login-btn'),
-        { theme: 'filled_black', size: 'large', text: 'continue_with', width: '360', shape: 'rectangular' }
+        { theme: 'filled_black', size: 'large', text: 'signin_with', width: '360', shape: 'rectangular' }
       );
     }
   }, []);
@@ -48,9 +48,7 @@ export default function LoginPage() {
   const validate = () => {
     const newErrors = {};
     if (!form.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Invalid email address';
     if (!form.password) newErrors.password = 'Password is required';
-    else if (form.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     return newErrors;
   };
 
@@ -64,53 +62,52 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const { data } = await api.post('/auth/login', {
-        email: form.email,
-        password: form.password,
-      });
+      const { data } = await api.post('/auth/login', form);
       login(data.data.user, data.data.token, data.data.refreshToken);
       navigate('/dashboard');
     } catch (err) {
-      const errMsg = err.response?.data?.message || 'Invalid credentials. Please try again.';
-      setErrors({ email: errMsg });
+      setErrors({ email: err.response?.data?.message || 'Invalid email or password' });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] p-8 sm:p-10 backdrop-blur-xl shadow-2xl">
+      {/* Subtle top light glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-[#d4684b]/40 to-transparent" />
+      
       {/* Mobile logo */}
       <div className="lg:hidden flex items-center gap-2 mb-8">
-        <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-white" />
+        <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow-accent">
+          <BookOpen className="w-5 h-5 text-white" />
         </div>
         <span className="text-xl font-bold text-white">
           Inter<span className="gradient-text">vo</span>
         </span>
       </div>
 
-      <h2 className="text-2xl font-bold text-white mb-2">Welcome back</h2>
-      <p className="text-slate-400 mb-8">
+      <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Welcome Back</h2>
+      <p className="text-sm text-slate-400 mb-8">
         Log in to continue your interview prep journey.
       </p>
 
       {/* Google OAuth */}
       <div className="w-full flex justify-center mb-6 min-h-[44px]">
-        <div id="google-login-btn" />
+        <div id="google-login-btn" className="w-full flex justify-center" />
       </div>
 
       {/* Divider */}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex-1 h-px bg-white/5" />
-        <span className="text-xs text-slate-500 uppercase tracking-wider">or</span>
+        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">or</span>
         <div className="flex-1 h-px bg-white/5" />
       </div>
 
       {/* Login Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <Input
-          label="Email"
+          label="Email Address"
           name="email"
           type="email"
           placeholder="you@example.com"
@@ -130,15 +127,15 @@ export default function LoginPage() {
           error={errors.password}
         />
 
-        <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center gap-2 text-slate-400 cursor-pointer">
+        <div className="flex items-center justify-between text-sm pt-1">
+          <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
             <input
               type="checkbox"
-              className="w-4 h-4 rounded border-slate-600 bg-navy-800 text-blue-500 focus:ring-blue-500/20"
+              className="w-4 h-4 rounded border-white/10 bg-navy-900/50 text-[#d4684b] focus:ring-[#d4684b]/20 focus:ring-offset-navy-950 cursor-pointer"
             />
             Remember me
           </label>
-          <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
+          <a href="#" className="text-xs font-semibold text-[#d4684b] hover:text-[#e88d72] transition-colors">
             Forgot password?
           </a>
         </div>
@@ -147,15 +144,15 @@ export default function LoginPage() {
           type="submit"
           variant="primary"
           loading={loading}
-          className="w-full mt-2"
+          className="w-full mt-4 h-11 rounded-xl font-bold bg-gradient-accent hover:bg-gradient-accent-hover text-white transition-all shadow-glow-accent/20 hover:shadow-glow-accent/40"
         >
           Log In
         </Button>
       </form>
 
-      <p className="text-sm text-slate-400 text-center mt-6">
+      <p className="text-sm text-slate-400 text-center mt-8">
         Don&apos;t have an account?{' '}
-        <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+        <Link to="/signup" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">
           Sign up
         </Link>
       </p>
