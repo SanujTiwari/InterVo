@@ -125,10 +125,7 @@ export default function LandingPage() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center"
           >
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#d4684b]/30 bg-[#d4684b]/10 px-4 py-2 text-sm text-[#d4684b]">
-              <Sparkles className="h-4 w-4" />
-              AI Powered Placement Preparation Platform
-            </div>
+          
 
             <h1 className="text-4xl font-black leading-tight sm:text-6xl lg:text-7xl text-white">
               Crack Your
@@ -165,20 +162,7 @@ export default function LandingPage() {
               </a>
             </div>
 
-            <div className="mt-12 flex flex-wrap justify-center gap-8 text-sm text-slate-500">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>No Credit Card Required</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>Free Forever Plan Available</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>100% Secure & Private</span>
-              </div>
-            </div>
+  
           </motion.div>
         </div>
       </section>
@@ -190,9 +174,6 @@ export default function LandingPage() {
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-20 text-center">
-            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
-              Features
-            </span>
             <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
               Everything You Need
               <br />
@@ -243,9 +224,7 @@ export default function LandingPage() {
       <section className="relative py-28 border-t border-white/5 bg-navy-950">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-20 text-center">
-            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
-              Workflow
-            </span>
+            
             <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
               Prepare Smarter
               <br />
@@ -306,9 +285,7 @@ export default function LandingPage() {
       >
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-20 text-center">
-            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
-              Pricing
-            </span>
+           
             <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
               Choose Your
               <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
@@ -375,9 +352,6 @@ export default function LandingPage() {
       >
         <div className="mx-auto max-w-4xl px-6">
           <div className="mb-16 text-center">
-            <span className="rounded-full bg-[#d4684b]/10 px-5 py-2 text-xs font-semibold text-[#d4684b] uppercase tracking-wider">
-              FAQ
-            </span>
             <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
               Frequently Asked
               <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
