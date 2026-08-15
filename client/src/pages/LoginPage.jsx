@@ -184,11 +184,11 @@ export default function LoginPage() {
       {/* Footer */}
       <p className="mt-8 text-center text-[13px] text-white/30">
         Don&apos;t have an account?{' '}
-        <Link
-          to="/signup"
-          className="text-white/60 hover:text-white transition-colors font-medium"
-        >
-          Create one
+        <Link to="/signup" className="auth-switch-link">
+          <span className="auth-switch-text">Create one</span>
+          <svg className="auth-switch-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
         </Link>
       </p>
     </div>

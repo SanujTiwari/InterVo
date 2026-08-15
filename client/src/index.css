@@ -223,6 +223,49 @@
     cursor: not-allowed;
   }
 
+  /* ─── Auth Switch Link (Sign in / Create one) ──────────────── */
+  .auth-switch-link {
+    @apply inline-flex items-center gap-1 font-medium relative;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.25s ease;
+  }
+
+  .auth-switch-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #d4684b;
+    transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .auth-switch-link:hover {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .auth-switch-link:hover::after {
+    width: 100%;
+  }
+
+  .auth-switch-text {
+    position: relative;
+  }
+
+  .auth-switch-arrow {
+    width: 14px;
+    height: 14px;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .auth-switch-link:hover .auth-switch-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
   /* Glow Effects */
   .glow-blue {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);

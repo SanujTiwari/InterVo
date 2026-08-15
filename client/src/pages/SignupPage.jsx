@@ -268,11 +268,11 @@ export default function SignupPage() {
       {/* Footer */}
       <p className="mt-8 text-center text-[13px] text-white/30">
         Already have an account?{' '}
-        <Link
-          to="/login"
-          className="text-white/60 hover:text-white transition-colors font-medium"
-        >
-          Sign in
+        <Link to="/login" className="auth-switch-link">
+          <span className="auth-switch-text">Sign in</span>
+          <svg className="auth-switch-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
         </Link>
       </p>
     </div>
