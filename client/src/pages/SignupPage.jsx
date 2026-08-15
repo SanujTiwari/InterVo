@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, BookOpen } from 'lucide-react';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -55,12 +52,12 @@ export default function SignupPage() {
     const newErrors = {};
     if (!form.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!form.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Invalid email address';
+    else if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Enter a valid email';
     if (!form.password) newErrors.password = 'Password is required';
-    else if (form.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    else if (form.password.length < 8) newErrors.password = 'Must be at least 8 characters';
     if (form.password !== form.confirmPassword)
-      newErrors.confirmPassword = 'Passwords do not match';
-    if (!form.acceptTerms) newErrors.acceptTerms = 'You must accept the terms';
+      newErrors.confirmPassword = 'Passwords don\'t match';
+    if (!form.acceptTerms) newErrors.acceptTerms = 'Required';
     return newErrors;
   };
 
@@ -82,7 +79,7 @@ export default function SignupPage() {
       login(data.data.user, data.data.token, data.data.refreshToken);
       navigate('/dashboard');
     } catch (err) {
-      const errMsg = err.response?.data?.message || 'An error occurred. Please try again.';
+      const errMsg = err.response?.data?.message || 'Something went wrong. Try again.';
       setErrors({ email: errMsg });
     } finally {
       setLoading(false);
@@ -90,111 +87,192 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] p-8 sm:p-10 backdrop-blur-xl shadow-2xl">
-      {/* Subtle top light glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-[#d4684b]/40 to-transparent" />
-      
-      {/* Mobile logo */}
-      <div className="lg:hidden flex items-center gap-2 mb-8">
-        <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow-accent">
-          <BookOpen className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-xl font-bold text-white">
-          Inter<span className="gradient-text">vo</span>
-        </span>
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-[22px] font-semibold text-white tracking-tight">
+          Create your account
+        </h1>
+        <p className="mt-1.5 text-sm text-white/40">
+          Get started — it only takes a minute.
+        </p>
       </div>
 
-      <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Create Account</h2>
-      <p className="text-sm text-slate-400 mb-8">
-        Start your journey to interview success.
-      </p>
-
       {/* Google OAuth */}
-      <div className="w-full flex justify-center mb-6 min-h-[44px]">
-        <div id="google-signup-btn" className="w-full flex justify-center" />
+      <div className="mb-6 min-h-[44px]">
+        <div id="google-signup-btn" className="w-full [&>div]:!w-full" />
       </div>
 
       {/* Divider */}
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex-1 h-px bg-white/5" />
-        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">or</span>
-        <div className="flex-1 h-px bg-white/5" />
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex-1 h-px bg-white/[0.07]" />
+        <span className="text-[11px] text-white/25 uppercase tracking-widest font-medium">
+          or
+        </span>
+        <div className="flex-1 h-px bg-white/[0.07]" />
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Full Name"
-          name="fullName"
-          placeholder="John Doe"
-          icon={User}
-          value={form.fullName}
-          onChange={handleChange}
-          error={errors.fullName}
-        />
-        <Input
-          label="Email Address"
-          name="email"
-          type="email"
-          placeholder="you@example.com"
-          icon={Mail}
-          value={form.email}
-          onChange={handleChange}
-          error={errors.email}
-        />
-        <Input
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          icon={Lock}
-          value={form.password}
-          onChange={handleChange}
-          error={errors.password}
-        />
-        <Input
-          label="Confirm Password"
-          name="confirmPassword"
-          type="password"
-          placeholder="••••••••"
-          icon={Lock}
-          value={form.confirmPassword}
-          onChange={handleChange}
-          error={errors.confirmPassword}
-        />
-
-        <label className="flex items-start gap-2.5 cursor-pointer pt-1 select-none">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4" id="signup-form">
+        {/* Full Name */}
+        <div>
+          <label
+            htmlFor="signup-name"
+            className="block text-[13px] font-medium text-white/50 mb-1.5"
+          >
+            Full name
+          </label>
           <input
+            id="signup-name"
+            name="fullName"
+            type="text"
+            autoComplete="name"
+            placeholder="Jane Smith"
+            value={form.fullName}
+            onChange={handleChange}
+            className={`auth-input ${errors.fullName ? 'auth-input-error' : ''}`}
+          />
+          {errors.fullName && (
+            <p className="mt-1.5 text-xs text-red-400/90">{errors.fullName}</p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div>
+          <label
+            htmlFor="signup-email"
+            className="block text-[13px] font-medium text-white/50 mb-1.5"
+          >
+            Email
+          </label>
+          <input
+            id="signup-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@company.com"
+            value={form.email}
+            onChange={handleChange}
+            className={`auth-input ${errors.email ? 'auth-input-error' : ''}`}
+          />
+          {errors.email && (
+            <p className="mt-1.5 text-xs text-red-400/90">{errors.email}</p>
+          )}
+        </div>
+
+        {/* Password row — side by side on wider screens */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="signup-password"
+              className="block text-[13px] font-medium text-white/50 mb-1.5"
+            >
+              Password
+            </label>
+            <input
+              id="signup-password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="8+ characters"
+              value={form.password}
+              onChange={handleChange}
+              className={`auth-input ${errors.password ? 'auth-input-error' : ''}`}
+            />
+            {errors.password && (
+              <p className="mt-1.5 text-xs text-red-400/90">{errors.password}</p>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="signup-confirm"
+              className="block text-[13px] font-medium text-white/50 mb-1.5"
+            >
+              Confirm
+            </label>
+            <input
+              id="signup-confirm"
+              name="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              className={`auth-input ${errors.confirmPassword ? 'auth-input-error' : ''}`}
+            />
+            {errors.confirmPassword && (
+              <p className="mt-1.5 text-xs text-red-400/90">{errors.confirmPassword}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Terms */}
+        <label
+          className="flex items-start gap-2.5 cursor-pointer select-none pt-1"
+          htmlFor="signup-terms"
+        >
+          <input
+            id="signup-terms"
             type="checkbox"
             name="acceptTerms"
             checked={form.acceptTerms}
             onChange={handleChange}
-            className="w-4 h-4 mt-0.5 rounded border-white/10 bg-navy-900/50 text-[#d4684b] focus:ring-[#d4684b]/20 focus:ring-offset-navy-950 cursor-pointer"
+            className="mt-0.5 w-3.5 h-3.5 rounded border-white/10 bg-white/[0.04] accent-[#d4684b] cursor-pointer"
           />
-          <span className="text-xs text-slate-400 leading-normal">
+          <span className="text-[12px] text-white/30 leading-normal">
             I agree to the{' '}
-            <a href="#" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">Terms of Service</a>
-            {' '}and{' '}
-            <a href="#" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">Privacy Policy</a>
+            <a href="#" className="text-white/50 hover:text-white/70 transition-colors underline underline-offset-2">
+              Terms
+            </a>{' '}
+            and{' '}
+            <a href="#" className="text-white/50 hover:text-white/70 transition-colors underline underline-offset-2">
+              Privacy Policy
+            </a>
           </span>
         </label>
         {errors.acceptTerms && (
-          <p className="text-xs text-red-400">{errors.acceptTerms}</p>
+          <p className="text-xs text-red-400/90">{errors.acceptTerms}</p>
         )}
 
-        <Button
+        {/* Submit */}
+        <button
           type="submit"
-          variant="primary"
-          loading={loading}
-          className="w-full mt-4 h-11 rounded-xl font-bold bg-gradient-accent hover:bg-gradient-accent-hover text-white transition-all shadow-glow-accent/20 hover:shadow-glow-accent/40"
+          disabled={loading}
+          id="signup-submit"
+          className="auth-btn-primary mt-2"
         >
-          Create Account
-        </Button>
+          {loading ? (
+            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className="opacity-20"
+              />
+              <path
+                d="M12 2a10 10 0 0 1 10 10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+          ) : (
+            'Create account'
+          )}
+        </button>
       </form>
 
-      <p className="text-sm text-slate-400 text-center mt-8">
+      {/* Footer */}
+      <p className="mt-8 text-center text-[13px] text-white/30">
         Already have an account?{' '}
-        <Link to="/login" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">
-          Log in
+        <Link
+          to="/login"
+          className="text-white/60 hover:text-white transition-colors font-medium"
+        >
+          Sign in
         </Link>
       </p>
     </div>

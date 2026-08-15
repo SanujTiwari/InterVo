@@ -181,6 +181,48 @@
     box-shadow: 0 0 0 3px rgba(212, 104, 75, 0.15);
   }
 
+  /* ─── Auth Form Styles ─────────────────────────────────────── */
+  .auth-input {
+    @apply w-full px-3.5 py-2.5 rounded-lg text-sm text-white placeholder-white/20
+           outline-none transition-colors duration-150;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .auth-input:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .auth-input:focus {
+    border-color: rgba(212, 104, 75, 0.45);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .auth-input-error {
+    border-color: rgba(239, 68, 68, 0.4) !important;
+  }
+
+  .auth-btn-primary {
+    @apply w-full flex items-center justify-center gap-2 px-4 py-2.5
+           text-sm font-medium text-white rounded-lg
+           transition-all duration-150 cursor-pointer;
+    background: #d4684b;
+  }
+
+  .auth-btn-primary:hover:not(:disabled) {
+    background: #c45f43;
+  }
+
+  .auth-btn-primary:active:not(:disabled) {
+    background: #b8573d;
+    transform: scale(0.99);
+  }
+
+  .auth-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   /* Glow Effects */
   .glow-blue {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);

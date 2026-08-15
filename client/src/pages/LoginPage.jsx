@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Mail, Lock, BookOpen } from 'lucide-react';
-import Input from '../components/ui/Input';
-import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -73,87 +69,126 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] p-8 sm:p-10 backdrop-blur-xl shadow-2xl">
-      {/* Subtle top light glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-[#d4684b]/40 to-transparent" />
-      
-      {/* Mobile logo */}
-      <div className="lg:hidden flex items-center gap-2 mb-8">
-        <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow-accent">
-          <BookOpen className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-xl font-bold text-white">
-          Inter<span className="gradient-text">vo</span>
-        </span>
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-[22px] font-semibold text-white tracking-tight">
+          Welcome back
+        </h1>
+        <p className="mt-1.5 text-sm text-white/40">
+          Sign in to your account to continue.
+        </p>
       </div>
 
-      <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Welcome Back</h2>
-      <p className="text-sm text-slate-400 mb-8">
-        Log in to continue your interview prep journey.
-      </p>
-
       {/* Google OAuth */}
-      <div className="w-full flex justify-center mb-6 min-h-[44px]">
-        <div id="google-login-btn" className="w-full flex justify-center" />
+      <div className="mb-6 min-h-[44px]">
+        <div id="google-login-btn" className="w-full [&>div]:!w-full" />
       </div>
 
       {/* Divider */}
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex-1 h-px bg-white/5" />
-        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">or</span>
-        <div className="flex-1 h-px bg-white/5" />
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex-1 h-px bg-white/[0.07]" />
+        <span className="text-[11px] text-white/25 uppercase tracking-widest font-medium">
+          or
+        </span>
+        <div className="flex-1 h-px bg-white/[0.07]" />
       </div>
 
-      {/* Login Form */}
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <Input
-          label="Email Address"
-          name="email"
-          type="email"
-          placeholder="you@example.com"
-          icon={Mail}
-          value={form.email}
-          onChange={handleChange}
-          error={errors.email}
-        />
-        <Input
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          icon={Lock}
-          value={form.password}
-          onChange={handleChange}
-          error={errors.password}
-        />
-
-        <div className="flex items-center justify-between text-sm pt-1">
-          <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              className="w-4 h-4 rounded border-white/10 bg-navy-900/50 text-[#d4684b] focus:ring-[#d4684b]/20 focus:ring-offset-navy-950 cursor-pointer"
-            />
-            Remember me
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4" id="login-form">
+        {/* Email */}
+        <div>
+          <label
+            htmlFor="login-email"
+            className="block text-[13px] font-medium text-white/50 mb-1.5"
+          >
+            Email
           </label>
-          <a href="#" className="text-xs font-semibold text-[#d4684b] hover:text-[#e88d72] transition-colors">
-            Forgot password?
-          </a>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@company.com"
+            value={form.email}
+            onChange={handleChange}
+            className={`auth-input ${errors.email ? 'auth-input-error' : ''}`}
+          />
+          {errors.email && (
+            <p className="mt-1.5 text-xs text-red-400/90">{errors.email}</p>
+          )}
         </div>
 
-        <Button
+        {/* Password */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label
+              htmlFor="login-password"
+              className="text-[13px] font-medium text-white/50"
+            >
+              Password
+            </label>
+            <a
+              href="#"
+              className="text-[12px] text-white/30 hover:text-white/50 transition-colors"
+            >
+              Forgot?
+            </a>
+          </div>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            placeholder="••••••••"
+            value={form.password}
+            onChange={handleChange}
+            className={`auth-input ${errors.password ? 'auth-input-error' : ''}`}
+          />
+          {errors.password && (
+            <p className="mt-1.5 text-xs text-red-400/90">{errors.password}</p>
+          )}
+        </div>
+
+        {/* Submit */}
+        <button
           type="submit"
-          variant="primary"
-          loading={loading}
-          className="w-full mt-4 h-11 rounded-xl font-bold bg-gradient-accent hover:bg-gradient-accent-hover text-white transition-all shadow-glow-accent/20 hover:shadow-glow-accent/40"
+          disabled={loading}
+          id="login-submit"
+          className="auth-btn-primary mt-2"
         >
-          Log In
-        </Button>
+          {loading ? (
+            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className="opacity-20"
+              />
+              <path
+                d="M12 2a10 10 0 0 1 10 10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+          ) : (
+            'Sign in'
+          )}
+        </button>
       </form>
 
-      <p className="text-sm text-slate-400 text-center mt-8">
+      {/* Footer */}
+      <p className="mt-8 text-center text-[13px] text-white/30">
         Don&apos;t have an account?{' '}
-        <Link to="/signup" className="text-[#d4684b] hover:text-[#e88d72] font-semibold transition-colors">
-          Sign up
+        <Link
+          to="/signup"
+          className="text-white/60 hover:text-white transition-colors font-medium"
+        >
+          Create one
         </Link>
       </p>
     </div>
