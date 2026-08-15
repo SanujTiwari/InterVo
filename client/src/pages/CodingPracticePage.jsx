@@ -515,12 +515,12 @@ const tutorialsData = {
 };
 
 export default function CodingPracticePage() {
-  const [selectedLangId, setSelectedLangId] = useState('react');
+  const [selectedLangId, setSelectedLangId] = useState('java');
   const [selectedTopicIndex, setSelectedTopicIndex] = useState(0);
   const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  const selectedLang = tutorialsData[selectedLangId] || tutorialsData.react;
+  const selectedLang = tutorialsData[selectedLangId] || tutorialsData.java;
   const topics = selectedLang?.topics || [];
   const currentTopic = topics[selectedTopicIndex] || {
     title: 'No Content Available',
@@ -555,124 +555,150 @@ export default function CodingPracticePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
-      <div className="flex items-center gap-3 mb-2">
-        <BookOpen className="w-8 h-8 text-[#d4684b]" />
-        <h1 className="text-3xl font-bold text-white">Documentation & Interview Prep</h1>
-      </div>
-      <p className="text-slate-400 mb-8">High-quality tutorials with code examples and interview questions.</p>
-
-      {/* Language Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8 border-b border-white/10 pb-4">
-        {Object.keys(tutorialsData).map((key) => (
-          <button
-            key={key}
-            onClick={() => {
-              setSelectedLangId(key);
-              setSelectedTopicIndex(0);
-              setExpandedFaqIndex(null);
-            }}
-            className={`px-5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
-              key === selectedLangId
-                ? 'bg-gradient-to-r from-[#d4684b] to-[#e88d72] text-white shadow-lg'
-                : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/10'
-            }`}
-          >
-            {tutorialsData[key].name}
-          </button>
-        ))}
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-2xl font-semibold text-white tracking-tight">
+          Documentation & Syntax Guides
+        </h1>
+        <p className="mt-1 text-sm text-white/40">
+          Core concepts, syntax references, and technical interview questions across 7 key technologies.
+        </p>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-8">
-        {/* Sidebar */}
+      {/* Language Selector Tabs */}
+      <div className="flex flex-wrap gap-2 border-b border-white/[0.06] pb-4">
+        {Object.keys(tutorialsData).map((key) => {
+          const isSelected = key === selectedLangId;
+          return (
+            <button
+              key={key}
+              onClick={() => {
+                setSelectedLangId(key);
+                setSelectedTopicIndex(0);
+                setExpandedFaqIndex(null);
+              }}
+              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors ${
+                isSelected
+                  ? 'bg-[#d4684b] text-white'
+                  : 'bg-white/[0.03] text-white/50 hover:text-white hover:bg-white/[0.06] border border-white/[0.06]'
+              }`}
+            >
+              {tutorialsData[key].name}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid lg:grid-cols-12 gap-6">
+        {/* Topic Sidebar */}
         <div className="lg:col-span-4 xl:col-span-3">
-          <div className="glass p-6 rounded-3xl sticky top-6">
-            <h3 className="uppercase text-xs font-bold tracking-widest text-slate-400 mb-5">TOPICS</h3>
-            <div className="space-y-1 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+          <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] sticky top-6">
+            <h3 className="text-[11px] font-semibold tracking-wider text-white/40 uppercase mb-3 px-2">
+              Topics
+            </h3>
+            <div className="space-y-1 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
               {topics.length > 0 ? (
-                topics.map((topic, index) => (
-                  <button
-                    key={index}
-                    onClick={() => { setSelectedTopicIndex(index); setExpandedFaqIndex(null); }}
-                    className={`w-full text-left px-4 py-3 rounded-2xl text-sm transition-all ${
-                      index === selectedTopicIndex ? 'bg-white/10 border-l-4 border-[#d4684b] text-white' : 'hover:bg-white/5 text-slate-400'
-                    }`}
-                  >
-                    <span className="line-clamp-2">{topic.title}</span>
-                  </button>
-                ))
+                topics.map((topic, index) => {
+                  const isSelected = index === selectedTopicIndex;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => { setSelectedTopicIndex(index); setExpandedFaqIndex(null); }}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                        isSelected
+                          ? 'bg-white/[0.07] text-white border-l-2 border-[#d4684b]'
+                          : 'text-white/40 hover:text-white/80 hover:bg-white/[0.03]'
+                      }`}
+                    >
+                      <span className="line-clamp-1">{topic.title}</span>
+                    </button>
+                  );
+                })
               ) : (
-                <p className="text-slate-500 py-8 text-center">No topics available</p>
+                <p className="text-xs text-white/30 p-4 text-center">No topics available</p>
               )}
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="lg:col-span-8 xl:col-span-9 space-y-8">
-          <motion.div
-            key={`${selectedLangId}-${selectedTopicIndex}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass p-8 md:p-10 rounded-3xl"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">{currentTopic.title}</h2>
-            <p className="text-slate-300 leading-relaxed mb-10">{currentTopic.description}</p>
+        {/* Content Area */}
+        <div className="lg:col-span-8 xl:col-span-9 space-y-6">
+          <div className="p-6 sm:p-8 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <h2 className="text-xl font-semibold text-white tracking-tight">
+                {currentTopic.title}
+              </h2>
+              {currentTopic.difficulty && (
+                <span className="text-[10px] font-medium text-white/50 border border-white/[0.1] px-2 py-0.5 rounded">
+                  {currentTopic.difficulty}
+                </span>
+              )}
+            </div>
+            <p className="text-xs sm:text-sm text-white/60 leading-relaxed mb-6">
+              {currentTopic.description}
+            </p>
 
             {currentTopic.code && (
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-slate-400 flex items-center gap-2">
-                    <Code2 className="w-5 h-5" /> Code Example
+              <div className="mt-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs text-white/40 flex items-center gap-1.5 font-medium">
+                    <Code2 className="w-3.5 h-3.5" /> Code Example
                   </span>
-                  <button onClick={() => handleCopy(currentTopic.code)} className="flex items-center gap-2 text-sm text-slate-400 hover:text-white">
-                    {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                    {copiedCode ? 'Copied!' : 'Copy Code'}
+                  <button
+                    onClick={() => handleCopy(currentTopic.code)}
+                    className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white transition-colors"
+                  >
+                    {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedCode ? 'Copied' : 'Copy'}</span>
                   </button>
                 </div>
-                <pre className="bg-[#0a0a0a] p-6 md:p-8 rounded-2xl overflow-x-auto text-sm font-mono text-slate-300 border border-white/10">
+                <pre className="bg-[#0a0a0a] p-4 sm:p-5 rounded-lg overflow-x-auto text-xs font-mono text-white/80 border border-white/[0.08] leading-relaxed">
                   <code>{currentTopic.code}</code>
                 </pre>
               </div>
             )}
 
-            <div className="flex justify-between mt-12 pt-6 border-t border-white/10">
-              <button onClick={handlePrev} disabled={selectedTopicIndex === 0} className="flex items-center gap-2 disabled:opacity-40 text-slate-400 hover:text-white">
+            <div className="flex justify-between items-center mt-8 pt-4 border-t border-white/[0.06] text-xs">
+              <button
+                onClick={handlePrev}
+                disabled={selectedTopicIndex === 0}
+                className="flex items-center gap-1 text-white/40 hover:text-white disabled:opacity-30 disabled:hover:text-white/40 transition-colors font-medium"
+              >
                 <ChevronLeft className="w-4 h-4" /> Previous
               </button>
-              <button onClick={handleNext} disabled={selectedTopicIndex === topics.length - 1} className="flex items-center gap-2 disabled:opacity-40 text-slate-400 hover:text-white">
+              <button
+                onClick={handleNext}
+                disabled={selectedTopicIndex === topics.length - 1}
+                className="flex items-center gap-1 text-white/40 hover:text-white disabled:opacity-30 disabled:hover:text-white/40 transition-colors font-medium"
+              >
                 Next <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-          </motion.div>
+          </div>
 
           {/* Interview Questions */}
           {currentTopic.faqs && currentTopic.faqs.length > 0 && (
-            <div className="glass p-8 md:p-10 rounded-3xl">
-              <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
-                <Lightbulb className="text-amber-400 w-6 h-6" /> Interview Questions
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <h3 className="text-sm font-medium text-white flex items-center gap-2 mb-4">
+                <Lightbulb className="text-[#d4684b] w-4 h-4" /> Top Interview Questions
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {currentTopic.faqs.map((faq, idx) => {
                   const isExpanded = expandedFaqIndex === idx;
                   return (
-                    <div key={idx} className="border border-white/10 rounded-2xl bg-white/[0.015]">
+                    <div key={idx} className="border border-white/[0.06] rounded-lg bg-white/[0.01]">
                       <button
                         onClick={() => toggleFaq(idx)}
-                        className="w-full px-6 py-5 text-left flex justify-between items-center hover:bg-white/5"
+                        className="w-full px-4 py-3 text-left flex justify-between items-center text-xs font-medium text-white/80 hover:text-white transition-colors"
                       >
-                        <span className="text-slate-200">{faq.question}</span>
-                        <ChevronDown className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        <span>{faq.question}</span>
+                        <ChevronDown className={`w-4 h-4 text-white/40 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                       </button>
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
-                            <div className="px-6 pb-6 text-slate-400 border-t border-white/10 pt-4">
-                              {faq.answer}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {isExpanded && (
+                        <div className="px-4 pb-4 text-xs text-white/40 border-t border-white/[0.04] pt-3 leading-relaxed">
+                          {faq.answer}
+                        </div>
+                      )}
                     </div>
                   );
                 })}

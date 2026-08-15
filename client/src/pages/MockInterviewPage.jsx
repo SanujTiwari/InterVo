@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import Card from '../components/ui/Card';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -24,34 +23,26 @@ const interviewTypes = [
   {
     id: 'technical',
     title: 'Technical',
-    description: 'Data structures, algorithms, and system design questions',
+    description: 'Data structures, algorithms, and technical concepts',
     icon: Code2,
-    color: 'blue',
-    gradient: 'from-blue-600 to-blue-500',
   },
   {
     id: 'behavioral',
     title: 'Behavioral',
-    description: 'STAR method, leadership, and situational questions',
+    description: 'STAR framework, situational, and soft-skill questions',
     icon: Users,
-    color: 'purple',
-    gradient: 'from-purple-600 to-purple-500',
   },
   {
     id: 'hr',
     title: 'HR Round',
-    description: 'Salary negotiation, culture fit, and career goals',
+    description: 'Culture fit, career trajectory, and salary expectations',
     icon: Brain,
-    color: 'emerald',
-    gradient: 'from-emerald-600 to-emerald-500',
   },
   {
     id: 'system-design',
     title: 'System Design',
-    description: 'Scalable architecture, distributed systems, and trade-offs',
+    description: 'Scalable architecture, trade-offs, and microservices',
     icon: Server,
-    color: 'amber',
-    gradient: 'from-amber-600 to-amber-500',
   },
 ];
 
@@ -79,9 +70,7 @@ export default function MockInterviewPage() {
     setIsInterviewing(true);
     setCurrentQuestion(0);
     setTimer(0);
-    // Start timer
     const interval = setInterval(() => setTimer((t) => t + 1), 1000);
-    // Store interval id for cleanup
     window._interviewTimer = interval;
   };
 
@@ -93,14 +82,13 @@ export default function MockInterviewPage() {
   const finishInterview = async () => {
     setIsInterviewing(false);
     if (window._interviewTimer) clearInterval(window._interviewTimer);
-    
-    // Simulate score based on metrics or random between 70 and 95
+
     const simulatedScore = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
-    
+
     try {
       await api.post('/users/profile/interview', { score: simulatedScore });
       await refreshProfile();
-      alert(`Interview completed successfully! Score: ${simulatedScore}% (+100 XP)`);
+      alert(`Interview completed! Score: ${simulatedScore}% (+100 XP)`);
     } catch (err) {
       console.error('Error saving interview statistics:', err);
     }
@@ -119,233 +107,201 @@ export default function MockInterviewPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-5xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-white mb-2">Mock Interviews</h1>
-        <p className="text-slate-400">
-          Practice with AI interviewers and get instant, actionable feedback.
+        <h1 className="text-2xl font-semibold text-white tracking-tight">
+          Mock Interviews
+        </h1>
+        <p className="mt-1 text-sm text-white/40">
+          Practice interactive interviews with AI feedback and real-time guidance.
         </p>
       </div>
 
       <AnimatePresence mode="wait">
         {!isInterviewing ? (
-          <motion.div
-            key="setup"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-8"
-          >
+          <div key="setup" className="space-y-8">
             {/* Interview Type Selection */}
             <div>
-              <h2 className="text-lg font-semibold text-white mb-4">Choose Interview Type</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {interviewTypes.map((type) => (
-                  <motion.button
-                    key={type.id}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedType(type.id)}
-                    className={`glass p-5 text-left transition-all duration-200 ${
-                      selectedType === type.id
-                        ? 'border-[#d4684b]/30 bg-[#d4684b]/5 shadow-glow-blue'
-                        : 'hover:border-white/10'
-                    }`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${type.gradient} flex items-center justify-center flex-shrink-0`}>
-                        <type.icon className="w-5 h-5 text-white" />
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3">
+                1. Select Interview Type
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {interviewTypes.map((type) => {
+                  const isSelected = selectedType === type.id;
+                  return (
+                    <button
+                      key={type.id}
+                      onClick={() => setSelectedType(type.id)}
+                      className={`p-4 rounded-xl border text-left transition-all relative ${
+                        isSelected
+                          ? 'border-[#d4684b] bg-white/[0.04]'
+                          : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.03]'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <div
+                          className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                            isSelected
+                              ? 'bg-[#d4684b] text-white'
+                              : 'bg-white/[0.05] text-white/50'
+                          }`}
+                        >
+                          <type.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-white mb-0.5">
+                            {type.title}
+                          </h3>
+                          <p className="text-xs text-white/35 leading-relaxed">
+                            {type.description}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-white mb-1">{type.title}</h3>
-                        <p className="text-xs text-slate-400">{type.description}</p>
-                      </div>
-                    </div>
-                    {selectedType === type.id && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-3 right-3"
-                      >
-                        <CheckCircle2 className="w-5 h-5 text-[#d4684b]" />
-                      </motion.div>
-                    )}
-                  </motion.button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Difficulty Selection */}
             <div>
-              <h2 className="text-lg font-semibold text-white mb-4">Select Difficulty</h2>
-              <div className="flex gap-3">
-                {difficulties.map((diff) => (
-                  <button
-                    key={diff}
-                    onClick={() => setSelectedDifficulty(diff)}
-                    className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                      selectedDifficulty === diff
-                        ? diff === 'Easy'
-                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                          : diff === 'Medium'
-                          ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                          : 'bg-red-500/15 text-red-400 border border-red-500/30'
-                        : 'glass text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    {diff}
-                  </button>
-                ))}
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3">
+                2. Select Difficulty
+              </h2>
+              <div className="flex gap-2">
+                {difficulties.map((diff) => {
+                  const isSelected = selectedDifficulty === diff;
+                  return (
+                    <button
+                      key={diff}
+                      onClick={() => setSelectedDifficulty(diff)}
+                      className={`px-4 py-2 rounded-lg text-xs font-medium border transition-colors ${
+                        isSelected
+                          ? 'border-[#d4684b] bg-[#d4684b]/15 text-[#d4684b]'
+                          : 'border-white/[0.06] bg-white/[0.02] text-white/50 hover:text-white hover:border-white/[0.12]'
+                      }`}
+                    >
+                      {diff}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Start Button */}
-            <Button
-              variant="primary"
-              size="lg"
-              icon={Play}
-              onClick={startInterview}
-              disabled={!selectedType}
-              className="w-full sm:w-auto"
-            >
-              Start Interview
-            </Button>
+            <div>
+              <Button
+                variant="primary"
+                size="md"
+                icon={Play}
+                onClick={startInterview}
+                disabled={!selectedType}
+              >
+                Start Practice Session
+              </Button>
+            </div>
 
             {/* Past Interviews */}
-            <div>
-              <h2 className="text-lg font-semibold text-white mb-4">Interview History</h2>
+            <div className="pt-4 border-t border-white/[0.06]">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">
+                Interview History
+              </h2>
               {pastInterviews.length === 0 ? (
-                <div className="glass p-8 text-center">
-                  <Mic className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-sm text-slate-500 mb-1">No interviews completed yet</p>
-                  <p className="text-xs text-slate-600">Start an interview above to build your history.</p>
+                <div className="p-8 text-center border border-white/[0.06] rounded-xl bg-white/[0.01]">
+                  <Mic className="w-8 h-8 text-white/20 mx-auto mb-2" />
+                  <p className="text-xs text-white/40">No past sessions recorded yet.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
-                {pastInterviews.map((interview) => (
-                  <motion.div
-                    key={interview.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="glass p-4 flex items-center gap-4 group hover:border-white/10 transition-all cursor-pointer"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-accent flex items-center justify-center flex-shrink-0">
-                      <span className={`text-lg font-bold ${getScoreColor(interview.score)}`}>
-                        {interview.score}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <p className="text-sm font-medium text-white truncate">{interview.topic}</p>
-                        <Badge
-                          size="sm"
-                          color={
-                            interview.difficulty === 'Easy'
-                              ? 'green'
-                              : interview.difficulty === 'Medium'
-                              ? 'yellow'
-                              : 'red'
-                          }
-                        >
-                          {interview.difficulty}
-                        </Badge>
+                <div className="space-y-2">
+                  {pastInterviews.map((interview) => (
+                    <div
+                      key={interview.id}
+                      className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center font-semibold text-sm">
+                          <span className={getScoreColor(interview.score)}>
+                            {interview.score}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-white">{interview.topic}</p>
+                          <p className="text-xs text-white/30">{interview.type} • {interview.date}</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-slate-500">
-                        <span>{interview.type}</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {interview.duration}
-                        </span>
-                        <span>•</span>
-                        <span>{interview.date}</span>
-                      </div>
+                      <ChevronRight className="w-4 h-4 text-white/30" />
                     </div>
-                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
-                  </motion.div>
-                ))}
-              </div>
+                  ))}
+                </div>
               )}
             </div>
-          </motion.div>
+          </div>
         ) : (
           /* Active Interview UI */
-          <motion.div
-            key="interview"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            className="space-y-6"
-          >
-            {/* Interview Header */}
-            <div className="glass p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-sm font-medium text-white">Live Interview</span>
+          <div key="interview" className="space-y-6">
+            {/* Header */}
+            <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-[#d4684b] animate-pulse" />
+                <span className="text-xs font-medium text-white">Live Practice Session</span>
                 <Badge color="yellow" size="sm">
                   {interviewTypes.find((t) => t.id === selectedType)?.title}
                 </Badge>
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-slate-400">
-                  <Timer className="w-4 h-4" />
-                  <span className="text-sm font-mono font-medium">{formatTime(timer)}</span>
+                <div className="flex items-center gap-1.5 text-white/40 text-xs font-mono">
+                  <Timer className="w-3.5 h-3.5" />
+                  <span>{formatTime(timer)}</span>
                 </div>
                 <button
                   onClick={() => setIsMuted(!isMuted)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isMuted ? 'bg-red-500/10 text-red-400' : 'bg-white/5 text-slate-400 hover:text-white'
-                  }`}
+                  className="p-1.5 rounded-lg border border-white/[0.08] bg-white/[0.04] text-white/60 hover:text-white"
                 >
                   {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Question Display */}
-            <Card hover={false} className="relative">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-medium text-[#d4684b] bg-[#d4684b]/10 px-2.5 py-1 rounded-full">
-                  Question {currentQuestion + 1} of {mockQuestions.length}
-                </span>
-              </div>
-              <p className="text-lg text-white leading-relaxed">
+            {/* Question */}
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <span className="text-[11px] font-semibold text-[#d4684b] uppercase tracking-wider mb-2 block">
+                Question {currentQuestion + 1} of {mockQuestions.length}
+              </span>
+              <p className="text-base text-white/90 leading-relaxed font-medium">
                 {mockQuestions[currentQuestion]}
               </p>
-            </Card>
+            </div>
 
-            {/* Answer Area */}
-            <div className="glass p-6">
-              <h3 className="text-sm font-medium text-slate-300 mb-3">Your Answer</h3>
+            {/* Answer Box */}
+            <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <h3 className="text-xs font-medium text-white/40 mb-2">Your Answer</h3>
               <textarea
-                placeholder="Type your answer here, or use the microphone to speak..."
-                className="w-full h-40 bg-transparent text-white placeholder-slate-600 outline-none resize-none text-sm leading-relaxed"
+                placeholder="Type your answer here or record your response..."
+                className="w-full h-36 bg-transparent text-sm text-white placeholder-white/20 outline-none resize-none"
               />
             </div>
 
-            {/* AI Feedback Indicators */}
+            {/* Metrics */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Clarity', value: 72, color: 'from-[#d4684b] to-[#e88d72]' },
-                { label: 'Depth', value: 65, color: 'from-[#e88d72] to-amber-500' },
-                { label: 'Relevance', value: 88, color: 'from-emerald-500 to-teal-500' },
+                { label: 'Clarity', value: 72 },
+                { label: 'Technical Depth', value: 65 },
+                { label: 'Relevance', value: 88 },
               ].map((metric) => (
-                <div key={metric.label} className="glass-light p-3 text-center">
-                  <p className="text-xs text-slate-500 mb-1">{metric.label}</p>
-                  <p className="text-lg font-bold text-white">{metric.value}%</p>
-                  <div className="w-full h-1 bg-slate-800 rounded-full mt-2 overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${metric.value}%` }}
-                      transition={{ duration: 1, delay: 0.5 }}
-                      className={`h-full rounded-full bg-gradient-to-r ${metric.color}`}
+                <div key={metric.label} className="p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+                  <p className="text-[11px] text-white/40 mb-1">{metric.label}</p>
+                  <p className="text-base font-semibold text-white">{metric.value}%</p>
+                  <div className="w-full h-1 bg-white/[0.06] rounded-full mt-2 overflow-hidden">
+                    <div
+                      className="h-full bg-[#d4684b] rounded-full"
+                      style={{ width: `${metric.value}%` }}
                     />
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Controls */}
+            {/* Actions */}
             <div className="flex items-center gap-3">
               {currentQuestion < mockQuestions.length - 1 ? (
                 <Button
@@ -361,10 +317,10 @@ export default function MockInterviewPage() {
                 </Button>
               )}
               <Button variant="secondary" icon={RotateCcw} onClick={endInterview}>
-                End Early
+                End Session
               </Button>
             </div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

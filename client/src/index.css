@@ -20,7 +20,7 @@
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #121212;
+    background-color: #0e0e0e;
     color: #e5e5e5;
     min-height: 100vh;
     overflow-x: hidden;
@@ -33,55 +33,66 @@
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0d0d0d;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #262626;
+    background: rgba(255, 255, 255, 0.08);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #333333;
+    background: rgba(255, 255, 255, 0.14);
   }
 }
 
 /* ─── Component Styles ─────────────────────────────────────────── */
 @layer components {
-  /* Glassmorphism Card */
-  .glass {
-    background: rgba(26, 26, 26, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-  }
 
-  .glass-light {
-    background: rgba(26, 26, 26, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+  /* ─── Card — the universal container ─────────────────────────── */
+  .card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
   }
 
+  .card-hover {
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card-hover:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Legacy glass — now just an alias for card */
+  .glass {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+  }
+
   .glass-hover {
-    transition: all 0.3s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
   .glass-hover:hover {
-    background: rgba(30, 22, 18, 0.75);
-    border-color: rgba(212, 104, 75, 0.2);
-    box-shadow: 0 0 30px rgba(212, 104, 75, 0.08);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
-  /* Gradient Text */
+  /* Gradient Text — used sparingly (hero only) */
   .gradient-text {
     background: linear-gradient(135deg, #d4684b, #e88d72);
     -webkit-background-clip: text;
@@ -89,96 +100,59 @@
     background-clip: text;
   }
 
-  .gradient-text-warm {
-    background: linear-gradient(135deg, #f59e0b, #ec4899);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .gradient-text-cool {
-    background: linear-gradient(135deg, #06b6d4, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Gradient Border */
-  .gradient-border {
-    position: relative;
-    background: rgba(10, 10, 10, 0.9);
-    border-radius: 16px;
-  }
-
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(139, 92, 246, 0.4));
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  /* Button Styles */
+  /* ─── Buttons ────────────────────────────────────────────────── */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 
-           font-semibold text-white rounded-xl overflow-hidden
-           transition-all duration-300 ease-out;
-    background: linear-gradient(135deg, #d4684b, #e88d72);
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5
+           font-medium text-white rounded-lg overflow-hidden
+           transition-all duration-150 ease-out;
+    background: #d4684b;
   }
 
   .btn-primary:hover {
-    background: linear-gradient(135deg, #be5b3f, #d57a60);
-    box-shadow: 0 0 25px rgba(212, 104, 75, 0.25);
-    transform: translateY(-1px);
+    background: #c45f43;
   }
 
   .btn-primary:active {
-    transform: translateY(0);
+    background: #b8573d;
+    transform: scale(0.99);
   }
 
   .btn-secondary {
-    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 
-           font-semibold rounded-xl overflow-hidden
-           transition-all duration-300 ease-out;
-    background: rgba(255, 255, 255, 0.05);
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5
+           font-medium rounded-lg overflow-hidden
+           transition-all duration-150 ease-out;
+    background: rgba(255, 255, 255, 0.04);
     color: #e5e5e5;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(212, 104, 75, 0.3);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.12);
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2
-           font-medium text-slate-300 rounded-lg
-           transition-all duration-200;
+           font-medium text-white/50 rounded-lg
+           transition-all duration-150;
   }
 
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
     color: #ffffff;
   }
 
-  /* Input Styles */
+  /* ─── Input ──────────────────────────────────────────────────── */
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl text-white placeholder-slate-500
-           outline-none transition-all duration-300;
-    background: rgba(26, 26, 26, 0.65);
+    @apply w-full px-3.5 py-2.5 rounded-lg text-sm text-white placeholder-white/20
+           outline-none transition-colors duration-150;
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .input-field:focus {
-    border-color: rgba(212, 104, 75, 0.5);
-    box-shadow: 0 0 0 3px rgba(212, 104, 75, 0.15);
+    border-color: rgba(212, 104, 75, 0.45);
+    background: rgba(255, 255, 255, 0.04);
   }
 
   /* ─── Auth Form Styles ─────────────────────────────────────── */
@@ -223,7 +197,7 @@
     cursor: not-allowed;
   }
 
-  /* ─── Auth Switch Link (Sign in / Create one) ──────────────── */
+  /* ─── Auth Switch Link ─────────────────────────────────────── */
   .auth-switch-link {
     @apply inline-flex items-center gap-1 font-medium relative;
     color: rgba(255, 255, 255, 0.6);
@@ -266,25 +240,7 @@
     transform: translateX(0);
   }
 
-  /* Glow Effects */
-  .glow-blue {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-
-  .glow-purple {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-  }
-
-  /* Animated Background Orb */
-  .bg-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.15;
-    pointer-events: none;
-  }
-
-  /* Skeleton Loading */
+  /* ─── Skeleton Loading ─────────────────────────────────────── */
   .skeleton {
     background: linear-gradient(
       90deg,
@@ -297,16 +253,9 @@
     border-radius: 8px;
   }
 
-  /* Page Transition */
-  .page-enter {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  .page-enter-active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.4s ease-out;
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 }
 
@@ -317,7 +266,7 @@
   }
 
   .bg-grid {
-    background-image: 
+    background-image:
       linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 60px 60px;

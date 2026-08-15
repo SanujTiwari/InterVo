@@ -1,344 +1,290 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
-  Play,
   Brain,
   BookOpen,
   FileText,
   Trophy,
-  CheckCircle2,
-  Sparkles,
-  ChevronDown
+  ChevronDown,
+  Check,
 } from 'lucide-react';
-
-import Button from '../components/ui/Button';
 
 const features = [
   {
     icon: Brain,
     title: 'AI Mock Interviews',
     description:
-      'Experience realistic HR, DSA, System Design and Behavioral interviews powered by AI.',
+      'Experience realistic HR, DSA, System Design, and Behavioral interviews powered by adaptive AI.',
   },
   {
     icon: BookOpen,
     title: 'Language Documentation',
     description:
-      'Study core concepts, cheatsheets, and top interview questions for 7 key languages.',
+      'Study core concepts, syntax sheets, and top interview questions for 7 essential languages.',
   },
   {
     icon: FileText,
     title: 'Resume Analyzer',
     description:
-      'Upload your resume and receive ATS score with AI suggestions.',
+      'Upload your resume and get immediate ATS feedback, score breakdown, and actionable tips.',
   },
   {
     icon: Trophy,
     title: 'Placement Roadmaps',
     description:
-      'Follow personalized preparation roadmaps designed for your target company.',
+      'Follow structured preparation roadmaps customized for your target roles and companies.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Is Intervo free to use?',
+    a: 'Yes! You can start with our free plan immediately and upgrade to Pro whenever you need unlimited access.',
+  },
+  {
+    q: 'Which programming languages are covered?',
+    a: 'Java, C++, Python, C, HTML, SQL, React, and more in our interactive syntax and concept documentation.',
+  },
+  {
+    q: 'How realistic are the AI mock interviews?',
+    a: 'Our AI simulates realistic interview environments with role-specific questions and instantaneous evaluation of your answers.',
+  },
+  {
+    q: 'Can I track my preparation progress over time?',
+    a: 'Yes, your dashboard automatically tracks completed interviews, problems solved, average score metrics, and XP level progress.',
   },
 ];
 
 export default function LandingPage() {
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const toggleFaq = (index) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
   return (
-    <div className="relative overflow-hidden bg-navy-950 text-white min-h-screen">
-
-      {/* ================= BACKGROUND ================= */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{
-            x: [0, 80, 0],
-            y: [0, -60, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
-          className="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-[#d4684b]/10 blur-[130px]"
-        />
-
-        <motion.div
-          animate={{
-            x: [0, -80, 0],
-            y: [0, 60, 0],
-          }}
-          transition={{
-            duration: 22,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
-          className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-[#e88d72]/10 blur-[130px]"
-        />
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:30px_30px]" />
-      </div>
+    <div className="relative overflow-hidden bg-[#0e0e0e] text-[#e5e5e5] min-h-screen">
+      {/* Background Gradient */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(212,104,75,0.12),rgba(255,255,255,0))]" />
 
       {/* ================= NAVBAR ================= */}
-      <header className="fixed top-0 z-50 w-full border-b border-white/5 backdrop-blur-xl bg-navy-950/80">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-          <Link
-            to="/"
-            className="text-2xl font-bold tracking-tight text-white flex items-center gap-2 group"
-          >
-            <div className="w-8 h-8 rounded-xl bg-gradient-accent flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-white" />
+      <header className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-[#0e0e0e]/80 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#d4684b] flex items-center justify-center">
+              <svg
+                className="w-3.5 h-3.5 text-white"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
             </div>
-            <span>
-              Inter<span className="gradient-text">vo</span>
+            <span className="text-base font-semibold text-white/90 tracking-tight">
+              Intervo
             </span>
           </Link>
 
-          <nav className="hidden gap-10 text-sm font-medium text-slate-400 lg:flex">
+          <nav className="hidden gap-8 text-xs font-medium text-white/50 lg:flex">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#workflow" className="hover:text-white transition-colors">Workflow</a>
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link to="/login">
-              <Button variant="secondary" size="sm">
-                Login
-              </Button>
+            <Link
+              to="/login"
+              className="text-xs font-medium text-white/60 hover:text-white px-3 py-1.5 transition-colors"
+            >
+              Sign In
             </Link>
-            <Link to="/signup">
-              <Button
-                variant="primary"
-                size="sm"
-                icon={ArrowRight}
-              >
-                Get Started
-              </Button>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-1.5 bg-[#d4684b] hover:bg-[#c45f43] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors"
+            >
+              Get Started
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </header>
 
       {/* ================= HERO ================= */}
-      <section className="relative flex min-h-screen items-center justify-center px-6 pt-20">
-        <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center justify-center">
+      <section className="relative flex min-h-screen items-center justify-center px-6 pt-24 pb-16">
+        <div className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.5 }}
             className="flex flex-col items-center"
           >
-          
-
-            <h1 className="text-4xl font-black leading-tight sm:text-6xl lg:text-7xl text-white">
-              Crack Your
-              <br />
-              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
-                Dream Tech Job
-              </span>
-              <br />
-              with AI
-            </h1>
-
-            <p className="mt-8 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-400">
-              Practice realistic AI interviews, study language documentation,
-              analyze your resume, and track everything from one beautiful, unified dashboard.
-            </p>
-
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link to="/signup">
-                <Button
-                  size="lg"
-                  variant="primary"
-                  icon={ArrowRight}
-                >
-                  Start Preparing Free
-                </Button>
-              </Link>
-              <a href="#features">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                >
-                  See How It Works
-                </Button>
-              </a>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1 text-xs text-white/60 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#d4684b]" />
+              AI-Powered Interview Coach
             </div>
 
-  
+            <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-white leading-[1.12]">
+              Nail your next interview with <span className="text-[#d4684b]">AI guidance.</span>
+            </h1>
+
+            <p className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-white/40">
+              Practice real-time technical & HR mock interviews, master language documentation, and optimize your resume on one clean platform.
+            </p>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                to="/signup"
+                className="inline-flex items-center gap-2 bg-[#d4684b] hover:bg-[#c45f43] text-white text-sm font-medium px-6 py-2.5 rounded-lg transition-colors"
+              >
+                Start Free Preparation
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <a
+                href="#features"
+                className="inline-flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] text-white/70 text-sm font-medium px-6 py-2.5 rounded-lg border border-white/[0.08] transition-colors"
+              >
+                Explore Features
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* ================= FEATURES ================= */}
-      <section
-        id="features"
-        className="py-24 border-t border-white/5 bg-white/[0.01]"
-      >
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-20 text-center">
-            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
-              Everything You Need
-              <br />
-              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
-                To Crack Interviews
-              </span>
+      <section id="features" className="py-24 border-t border-white/[0.06]">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-16 text-center max-w-xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              Everything required to land the offer
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-base text-slate-400">
-              One platform for language documentation, AI mock interviews,
-              resume analysis, and personalized learning roadmaps.
+            <p className="mt-3 text-sm text-white/40">
+              Built specifically for software engineers and computer science candidates.
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  delay: index * 0.1,
-                  duration: 0.5,
-                }}
-                whileHover={{
-                  y: -5,
-                }}
-                className="group relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-xl transition-all"
+                className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1] transition-all"
               >
-                <div className="relative z-10">
-                  <div className="mb-6 inline-flex rounded-2xl bg-[#d4684b]/10 p-4 text-[#d4684b] group-hover:scale-110 transition-transform duration-300">
-                    <feature.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mb-3 text-xl font-bold text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-slate-400">
-                    {feature.description}
-                  </p>
+                <div className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center text-[#d4684b] mb-4">
+                  <feature.icon className="w-4 h-4" />
                 </div>
-              </motion.div>
+                <h3 className="text-base font-medium text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ================= AI WORKFLOW ================= */}
-      <section className="relative py-28 border-t border-white/5 bg-navy-950">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-20 text-center">
-            
-            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
-              Prepare Smarter
-              <br />
-              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
-                With AI Guidance
-              </span>
+      {/* ================= WORKFLOW ================= */}
+      <section id="workflow" className="py-24 border-t border-white/[0.06] bg-white/[0.01]">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-16 text-center max-w-xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              How Intervo works
             </h2>
+            <p className="mt-3 text-sm text-white/40">
+              A structured system designed to raise your performance standard.
+            </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              {
-                title: 'Upload Resume',
-                desc: 'AI analyzes your resume and identifies weak sections.',
-                step: '01'
-              },
-              {
-                title: 'Receive Roadmap',
-                desc: 'Get a personalized preparation roadmap based on your target company.',
-                step: '02'
-              },
-              {
-                title: 'Practice Daily',
-                desc: 'Solve coding problems, aptitude tests and mock interviews.',
-                step: '03'
-              },
-              {
-                title: 'Track Progress',
-                desc: 'Monitor your strengths, weaknesses and interview readiness.',
-                step: '04'
-              },
+              { title: 'Upload Resume', desc: 'Instant ATS feedback & skill gaps analysis.', step: '01' },
+              { title: 'Personalized Plan', desc: 'Custom roadmaps target your key weaknesses.', step: '02' },
+              { title: 'Daily Practice', desc: 'Mock interviews, syntax sheets, & coding exercises.', step: '03' },
+              { title: 'Track Mastery', desc: 'Detailed metrics and progress reports.', step: '04' },
             ].map((item, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="rounded-3xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl relative"
+                className="p-5 rounded-xl border border-white/[0.06] bg-white/[0.02] relative flex flex-col justify-between h-40"
               >
-                <span className="text-3xl font-black text-[#d4684b]/20 absolute top-4 right-4">{item.step}</span>
-                <h3 className="mb-3 text-lg font-bold text-white mt-4">
-                  {item.title}
-                </h3>
-                <p className="text-xs leading-relaxed text-slate-400">
-                  {item.desc}
-                </p>
-              </motion.div>
+                <span className="text-xs font-mono text-white/20">{item.step}</span>
+                <div>
+                  <h3 className="text-sm font-medium text-white mb-1">{item.title}</h3>
+                  <p className="text-xs text-white/40 leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ================= PRICING ================= */}
-      <section
-        id="pricing"
-        className="py-28 border-t border-white/5 bg-white/[0.01]"
-      >
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-20 text-center">
-           
-            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
-              Choose Your
-              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
-                {' '}Plan
-              </span>
+      <section id="pricing" className="py-24 border-t border-white/[0.06]">
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="mb-16 text-center">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              Simple, transparent pricing
             </h2>
+            <p className="mt-3 text-sm text-white/40">
+              Start for free, upgrade when you are ready to accelerate.
+            </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-2 max-w-4xl mx-auto">
-            {/* Free Plan */}
-            <div className="rounded-3xl border border-white/5 bg-white/[0.02] p-8 flex flex-col justify-between">
+          <div className="grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+            {/* Free */}
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] flex flex-col justify-between">
               <div>
-                <h3 className="text-2xl font-bold text-white">Free</h3>
-                <p className="mt-2 text-xs text-slate-400">Perfect for getting started.</p>
-                <h2 className="my-6 text-4xl font-black text-white">₹0</h2>
-                <ul className="space-y-4 text-xs text-slate-300">
-                  <li className="flex items-center gap-2">✓ 5 AI Mock Interviews</li>
-                  <li className="flex items-center gap-2">✓ Basic Resume Analysis</li>
-                  <li className="flex items-center gap-2">✓ Syntax & Concept Guides</li>
-                  <li className="flex items-center gap-2">✓ Core Study Roadmaps</li>
+                <h3 className="text-base font-medium text-white">Free Starter</h3>
+                <p className="mt-1 text-xs text-white/40">Essential tools to begin.</p>
+                <div className="my-6">
+                  <span className="text-3xl font-semibold text-white">₹0</span>
+                </div>
+                <ul className="space-y-2.5 text-xs text-white/60">
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> 5 AI Mock Interviews</li>
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> Basic Resume Scoring</li>
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> Full Language Syntax Documentation</li>
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> Placement Roadmaps Access</li>
                 </ul>
               </div>
-              <Link to="/signup" className="mt-8">
-                <Button className="w-full" variant="secondary">
-                  Get Started
-                </Button>
+              <Link
+                to="/signup"
+                className="mt-8 block text-center bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-medium py-2.5 rounded-lg border border-white/[0.08] transition-colors"
+              >
+                Get Started
               </Link>
             </div>
 
-            {/* Pro Plan */}
-            <div className="relative overflow-hidden rounded-3xl border border-[#d4684b]/50 bg-gradient-to-br from-[#d4684b]/10 to-[#e88d72]/10 p-8 flex flex-col justify-between shadow-[0_0_30px_rgba(212,104,75,0.1)]">
-              <div className="absolute right-5 top-5 rounded-full bg-[#d4684b] px-3 py-1 text-[10px] font-bold text-white">
-                POPULAR
+            {/* Pro */}
+            <div className="p-6 rounded-xl border border-[#d4684b]/40 bg-white/[0.03] relative flex flex-col justify-between">
+              <div className="absolute top-4 right-4 bg-[#d4684b]/15 text-[#d4684b] text-[10px] font-semibold px-2 py-0.5 rounded">
+                RECOMMENDED
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Pro</h3>
-                <p className="mt-2 text-xs text-slate-300">Unlimited AI powered preparation.</p>
-                <h2 className="my-6 text-4xl font-black text-white">
-                  ₹499
-                  <span className="text-sm font-normal text-slate-400">/month</span>
-                </h2>
-                <ul className="space-y-4 text-xs text-slate-200">
-                  <li className="flex items-center gap-2">✓ Unlimited AI Mock Interviews</li>
-                  <li className="flex items-center gap-2">✓ Unlimited Detailed Resume Reviews</li>
-                  <li className="flex items-center gap-2">✓ Unlimited Company-Specific Roadmaps</li>
-                  <li className="flex items-center gap-2">✓ Advanced Concept & Prep Libraries</li>
-                  <li className="flex items-center gap-2">✓ In-Depth Performance Analytics</li>
+                <h3 className="text-base font-medium text-white">Pro Pass</h3>
+                <p className="mt-1 text-xs text-white/40">Complete AI interview prep toolkit.</p>
+                <div className="my-6">
+                  <span className="text-3xl font-semibold text-white">₹499</span>
+                  <span className="text-xs text-white/40"> / month</span>
+                </div>
+                <ul className="space-y-2.5 text-xs text-white/80">
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> Unlimited AI Mock Interviews</li>
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> In-depth Resume ATS Reviews</li>
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> Company-Specific Roadmaps</li>
+                  <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#d4684b]" /> Detailed Performance Analytics</li>
                 </ul>
               </div>
-              <Link to="/signup" className="mt-8">
-                <Button className="w-full" variant="primary">
-                  Upgrade Now
-                </Button>
+              <Link
+                to="/signup"
+                className="mt-8 block text-center bg-[#d4684b] hover:bg-[#c45f43] text-white text-xs font-medium py-2.5 rounded-lg transition-colors"
+              >
+                Upgrade to Pro
               </Link>
             </div>
           </div>
@@ -346,113 +292,59 @@ export default function LandingPage() {
       </section>
 
       {/* ================= FAQ ================= */}
-      <section
-        id="faq"
-        className="py-28 border-t border-white/5 bg-navy-950"
-      >
-        <div className="mx-auto max-w-4xl px-6">
-          <div className="mb-16 text-center">
-            <h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">
-              Frequently Asked
-              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
-                {' '}Questions
-              </span>
+      <section id="faq" className="py-24 border-t border-white/[0.06] bg-white/[0.01]">
+        <div className="mx-auto max-w-3xl px-6">
+          <div className="mb-14 text-center">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              Frequently asked questions
             </h2>
           </div>
 
-          <div className="space-y-4">
-            {[
-              {
-                q: 'Is Intervo free to use?',
-                a: 'Yes. You can start with our free plan and upgrade anytime for advanced features.',
-              },
-              {
-                q: 'Which programming languages are supported?',
-                a: 'Java, C++, Python, C, HTML, SQL, React and many more in our Syntax Guides.',
-              },
-              {
-                q: 'Are AI interviews realistic?',
-                a: 'Yes. They simulate real technical, HR and behavioral interviews, complete with comprehensive scoring metrics.',
-              },
-              {
-                q: 'Can I track my progress?',
-                a: 'Yes. Intervo provides detailed stats dashboard containing resume ratings and interview reports.',
-              },
-            ].map((faq, index) => (
-              <div
-                key={index}
-                className="rounded-2xl border border-white/5 bg-white/[0.01] p-6"
-              >
-                <h3 className="mb-3 text-lg font-semibold text-white">
-                  {faq.q}
-                </h3>
-                <p className="text-sm leading-relaxed text-slate-400">
-                  {faq.a}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= CTA ================= */}
-      <section className="py-24 border-t border-white/5 bg-white/[0.01]">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="overflow-hidden rounded-[32px] border border-[#d4684b]/20 bg-gradient-to-br from-[#d4684b]/10 via-navy-950 to-[#e88d72]/10 p-12 text-center shadow-[0_0_40px_rgba(212,104,75,0.05)]">
-            <h2 className="text-3xl sm:text-5xl font-black text-white">
-              Ready To Land Your
-              <span className="bg-gradient-to-r from-[#d4684b] to-[#e88d72] bg-clip-text text-transparent">
-                {' '}Dream Job?
-              </span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-slate-300">
-              Join students preparing smarter with AI. Practice interviews, study documentation,
-              optimize your resume, and get placement ready.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link to="/signup">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  icon={ArrowRight}
+          <div className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div
+                  key={index}
+                  className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden"
                 >
-                  Get Started Free
-                </Button>
-              </Link>
-            </div>
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    className="w-full px-5 py-4 text-left flex items-center justify-between text-sm font-medium text-white/80 hover:text-white"
+                  >
+                    <span>{faq.q}</span>
+                    <ChevronDown className={`w-4 h-4 text-white/40 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 pb-4 text-xs text-white/40 leading-relaxed border-t border-white/[0.04] pt-3">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ================= FOOTER ================= */}
-      <footer className="border-t border-white/5 py-12 bg-navy-950">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
-          <div>
-            <h2 className="text-2xl font-black text-white flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-accent flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-white" />
-              </div>
-              <span>
-                Inter<span className="gradient-text">vo</span>
-              </span>
-            </h2>
-            <p className="mt-2 text-xs text-slate-500">
-              AI Powered Placement Preparation Platform
-            </p>
+      <footer className="border-t border-white/[0.06] py-10 bg-[#0a0a0a]">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-[#d4684b] flex items-center justify-center">
+              <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+            </div>
+            <span className="text-sm font-semibold text-white/90">Intervo</span>
           </div>
 
-          <div className="flex gap-6 text-xs text-slate-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-            <Link to="/login" className="hover:text-white transition-colors">Login</Link>
-          </div>
-        </div>
-        <div className="mt-10 border-t border-white/5 pt-8 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} Intervo. All Rights Reserved.
+          <p className="text-xs text-white/30">
+            © {new Date().getFullYear()} Intervo. All rights reserved.
+          </p>
         </div>
       </footer>
-
     </div>
   );
 }

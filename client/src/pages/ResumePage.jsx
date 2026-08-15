@@ -7,10 +7,6 @@ import {
   AlertCircle,
   X,
   ChevronRight,
-  TrendingUp,
-  Star,
-  Clock,
-  BarChart3,
   Lightbulb,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
@@ -20,20 +16,20 @@ import ProgressBar from '../components/ui/ProgressBar';
 const mockAnalysis = {
   overallScore: 82,
   sections: [
-    { name: 'Contact Information', score: 95, status: 'excellent', tips: ['All essential info present'] },
-    { name: 'Professional Summary', score: 85, status: 'good', tips: ['Add more quantifiable achievements', 'Make it more role-specific'] },
-    { name: 'Work Experience', score: 78, status: 'good', tips: ['Use more action verbs', 'Add metrics to 3 bullet points', 'Include technologies used'] },
-    { name: 'Education', score: 90, status: 'excellent', tips: ['Well structured and complete'] },
-    { name: 'Skills', score: 70, status: 'needs_work', tips: ['Organize by category', 'Remove outdated technologies', 'Add proficiency levels'] },
-    { name: 'Projects', score: 75, status: 'good', tips: ['Add deployment links', 'Mention tech stack for each project', 'Highlight impact/results'] },
+    { name: 'Contact Information', score: 95, status: 'excellent', tips: ['All essential contact details present'] },
+    { name: 'Professional Summary', score: 85, status: 'good', tips: ['Add more quantifiable achievements', 'Tailor summary to specific role'] },
+    { name: 'Work Experience', score: 78, status: 'good', tips: ['Use strong action verbs', 'Add impact metrics to bullet points', 'Include full tech stack'] },
+    { name: 'Education', score: 90, status: 'excellent', tips: ['Well structured and formatted'] },
+    { name: 'Skills', score: 70, status: 'needs_work', tips: ['Group skills by category', 'Prune outdated tools', 'Indicate key proficiencies'] },
+    { name: 'Projects', score: 75, status: 'good', tips: ['Add live demo or GitHub links', 'Detail architecture decisions'] },
   ],
   improvements: [
-    'Add 3-5 quantifiable achievements in your work experience',
-    'Include a tailored professional summary for each application',
-    'Organize skills into categories (Languages, Frameworks, Tools)',
+    'Add 3-5 quantifiable achievements (e.g. reduced load times by 40%)',
+    'Tailor your summary section for each specific application',
+    'Organize skills into distinct categories (Languages, Frameworks, Tools)',
     'Add links to live projects or GitHub repositories',
-    'Use stronger action verbs (Engineered, Optimized, Architected)',
-    'Reduce resume to 1 page for early-career positions',
+    'Use active engineering verbs (Engineered, Optimized, Designed)',
+    'Keep resume concise (1 page for early-career developers)',
   ],
 };
 
@@ -71,8 +67,7 @@ export default function ResumePage() {
 
   const analyzeResume = async () => {
     setIsAnalyzing(true);
-    // Mock API delay
-    await new Promise((resolve) => setTimeout(resolve, 2500));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setAnalysis(mockAnalysis);
     setIsAnalyzing(false);
   };
@@ -89,51 +84,41 @@ export default function ResumePage() {
     return 'Needs Work';
   };
 
-  const getScoreGradient = (score) => {
-    if (score >= 80) return 'from-emerald-500 to-teal-500';
-    if (score >= 60) return 'from-amber-500 to-orange-500';
-    return 'from-red-500 to-rose-500';
-  };
-
   return (
-    <div className="space-y-8">
+    <div className="max-w-5xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-white mb-2">Resume Analyzer</h1>
-        <p className="text-slate-400">
-          Upload your resume and get AI-powered feedback to stand out.
+        <h1 className="text-2xl font-semibold text-white tracking-tight">
+          Resume Analyzer
+        </h1>
+        <p className="mt-1 text-sm text-white/40">
+          Upload your resume in PDF format for automated ATS evaluation and improvement tips.
         </p>
       </div>
 
       <AnimatePresence mode="wait">
         {!analysis ? (
-          <motion.div
-            key="upload"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-8"
-          >
-            {/* Upload Area */}
+          <div key="upload" className="space-y-8">
+            {/* Upload Box */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              className={`glass p-10 text-center transition-all duration-300 cursor-pointer ${
+              className={`p-10 rounded-xl border text-center transition-colors cursor-pointer ${
                 isDragOver
-                  ? 'border-[#d4684b]/40 bg-[#d4684b]/5 shadow-glow-blue'
-                  : 'hover:border-white/10'
+                  ? 'border-[#d4684b] bg-[#d4684b]/5'
+                  : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12]'
               }`}
             >
               {!uploadedFile ? (
                 <>
-                  <div className="w-16 h-16 rounded-2xl bg-[#d4684b]/10 flex items-center justify-center mx-auto mb-5">
-                    <Upload className="w-8 h-8 text-[#d4684b]" />
+                  <div className="w-12 h-12 rounded-lg bg-white/[0.05] text-[#d4684b] flex items-center justify-center mx-auto mb-4">
+                    <Upload className="w-5 h-5" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    Drop your resume here
+                  <h3 className="text-sm font-medium text-white mb-1">
+                    Drag and drop your resume
                   </h3>
-                  <p className="text-sm text-slate-400 mb-4">
-                    or click to browse • PDF format • Max 5MB
+                  <p className="text-xs text-white/40 mb-4">
+                    PDF files only • Max file size 5MB
                   </p>
                   <label>
                     <input
@@ -142,19 +127,19 @@ export default function ResumePage() {
                       onChange={handleFileSelect}
                       className="hidden"
                     />
-                    <span className="btn-secondary text-sm cursor-pointer">
-                      Browse Files
+                    <span className="inline-block bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-medium px-4 py-2 rounded-lg border border-white/[0.08] cursor-pointer transition-colors">
+                      Browse File
                     </span>
                   </label>
                 </>
               ) : (
                 <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#d4684b]/10 flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-[#d4684b]" />
+                  <div className="w-10 h-10 rounded-lg bg-[#d4684b]/15 text-[#d4684b] flex items-center justify-center">
+                    <FileText className="w-5 h-5" />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-medium text-white">{uploadedFile.name}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs font-medium text-white">{uploadedFile.name}</p>
+                    <p className="text-[11px] text-white/30">
                       {(uploadedFile.size / 1024).toFixed(1)} KB
                     </p>
                   </div>
@@ -163,7 +148,7 @@ export default function ResumePage() {
                       e.stopPropagation();
                       setUploadedFile(null);
                     }}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                    className="p-1 rounded text-white/40 hover:text-red-400 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -174,174 +159,145 @@ export default function ResumePage() {
             {uploadedFile && (
               <Button
                 variant="primary"
-                size="lg"
+                size="md"
                 loading={isAnalyzing}
                 onClick={analyzeResume}
-                className="w-full sm:w-auto"
               >
-                {isAnalyzing ? 'Analyzing...' : 'Analyze Resume'}
+                {isAnalyzing ? 'Analyzing Resume...' : 'Analyze Resume'}
               </Button>
             )}
 
             {/* Past Analyses */}
-            <div>
-              <h2 className="text-lg font-semibold text-white mb-4">Analysis History</h2>
+            <div className="pt-4 border-t border-white/[0.06]">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">
+                Analysis History
+              </h2>
               {pastAnalyses.length === 0 ? (
-                <div className="glass p-8 text-center">
-                  <FileText className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-sm text-slate-500 mb-1">No analyses completed yet</p>
-                  <p className="text-xs text-slate-600">Upload your resume above to get a detailed AI feedback review.</p>
+                <div className="p-8 text-center border border-white/[0.06] rounded-xl bg-white/[0.01]">
+                  <FileText className="w-8 h-8 text-white/20 mx-auto mb-2" />
+                  <p className="text-xs text-white/40">No previous resume evaluations.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {pastAnalyses.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => setAnalysis(mockAnalysis)}
-                      className="w-full glass p-4 flex items-center gap-4 text-left hover:border-white/10 transition-all group"
+                      className="w-full p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-between text-left hover:border-white/[0.12] transition-colors"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-[#d4684b]/10 flex items-center justify-center">
-                        <FileText className="w-5 h-5 text-[#d4684b]" />
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-4 h-4 text-[#d4684b]" />
+                        <div>
+                          <p className="text-xs font-medium text-white">{item.name}</p>
+                          <p className="text-[11px] text-white/30">{item.date}</p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-white">{item.name}</p>
-                        <p className="text-xs text-slate-500">{item.date}</p>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-semibold text-white">{item.score}</span>
+                        <ChevronRight className="w-4 h-4 text-white/30" />
                       </div>
-                      <div className="text-right">
-                        <p className={`text-lg font-bold ${
-                          item.score >= 80 ? 'text-emerald-400' : item.score >= 60 ? 'text-amber-400' : 'text-red-400'
-                        }`}>{item.score}</p>
-                        <p className="text-xs text-slate-600">score</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         ) : (
-          /* Analysis Results */
-          <motion.div
-            key="results"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-8"
-          >
-            <Button variant="ghost" onClick={() => setAnalysis(null)} className="mb-2">
+          /* Results UI */
+          <div key="results" className="space-y-6">
+            <button
+              onClick={() => setAnalysis(null)}
+              className="text-xs text-white/40 hover:text-white transition-colors"
+            >
               ← Back to Upload
-            </Button>
+            </button>
 
-            {/* Overall Score */}
-            <div className="glass p-8 text-center">
-              <p className="text-sm text-slate-400 mb-4">Overall Resume Score</p>
-              <div className="relative w-36 h-36 mx-auto mb-4">
+            {/* Score */}
+            <div className="p-8 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+              <p className="text-xs text-white/40 mb-4 font-medium uppercase tracking-wider">Overall ATS Match Score</p>
+              <div className="relative w-28 h-28 mx-auto mb-3">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
                   <circle
-                    cx="60" cy="60" r="52"
+                    cx="60" cy="60" r="50"
                     fill="none"
-                    stroke="rgba(255,255,255,0.05)"
-                    strokeWidth="8"
+                    stroke="rgba(255,255,255,0.06)"
+                    strokeWidth="6"
                   />
-                  <motion.circle
-                    cx="60" cy="60" r="52"
+                  <circle
+                    cx="60" cy="60" r="50"
                     fill="none"
-                    stroke="url(#scoreGradient)"
-                    strokeWidth="8"
+                    stroke="#d4684b"
+                    strokeWidth="6"
                     strokeLinecap="round"
-                    strokeDasharray={`${2 * Math.PI * 52}`}
-                    initial={{ strokeDashoffset: 2 * Math.PI * 52 }}
-                    animate={{
-                      strokeDashoffset: 2 * Math.PI * 52 * (1 - analysis.overallScore / 100),
-                    }}
-                    transition={{ duration: 1.5, ease: 'easeOut' }}
+                    strokeDasharray={`${2 * Math.PI * 50}`}
+                    strokeDashoffset={`${2 * Math.PI * 50 * (1 - analysis.overallScore / 100)}`}
                   />
-                  <defs>
-                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#d4684b" />
-                      <stop offset="100%" stopColor="#e88d72" />
-                    </linearGradient>
-                  </defs>
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="text-4xl font-bold text-white"
-                  >
+                  <span className="text-3xl font-semibold text-white tracking-tight">
                     {analysis.overallScore}
-                  </motion.span>
+                  </span>
                 </div>
               </div>
-              <p className="text-emerald-400 font-medium">Good — Above average</p>
+              <p className="text-xs font-medium text-emerald-400">Above Average Match</p>
             </div>
 
             {/* Section Breakdown */}
             <div>
-              <h2 className="text-lg font-semibold text-white mb-4">Section Breakdown</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {analysis.sections.map((section, i) => (
-                  <motion.div
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-3">
+                Section Breakdown
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {analysis.sections.map((section) => (
+                  <div
                     key={section.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="glass p-5"
+                    className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-sm font-semibold text-white">{section.name}</h3>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xs font-medium text-white">{section.name}</h3>
                       <Badge size="sm" color={getStatusColor(section.status)}>
                         {getStatusLabel(section.status)}
                       </Badge>
                     </div>
-                    <ProgressBar
-                      value={section.score}
-                      max={100}
-                      size="sm"
-                    />
-                    <ul className="mt-3 space-y-1.5">
+                    <ProgressBar value={section.score} max={100} size="sm" showValue={false} />
+                    <ul className="mt-3 space-y-1">
                       {section.tips.map((tip, j) => (
-                        <li key={j} className="flex items-start gap-2 text-xs text-slate-400">
+                        <li key={j} className="flex items-start gap-1.5 text-[11px] text-white/40">
                           {section.status === 'excellent' ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-3 h-3 text-emerald-400 flex-shrink-0 mt-0.5" />
                           ) : (
-                            <AlertCircle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                            <AlertCircle className="w-3 h-3 text-amber-400 flex-shrink-0 mt-0.5" />
                           )}
-                          {tip}
+                          <span>{tip}</span>
                         </li>
                       ))}
                     </ul>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Improvement Suggestions */}
-            <div className="glass p-6">
+            {/* Suggestions */}
+            <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
               <div className="flex items-center gap-2 mb-4">
-                <Lightbulb className="w-5 h-5 text-amber-400" />
-                <h2 className="text-lg font-semibold text-white">Key Improvements</h2>
+                <Lightbulb className="w-4 h-4 text-[#d4684b]" />
+                <h2 className="text-sm font-medium text-white">Recommended Improvements</h2>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {analysis.improvements.map((tip, i) => (
-                  <motion.div
+                  <div
                     key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + i * 0.1 }}
-                    className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.02] transition-colors"
+                    className="flex items-start gap-2.5 p-2.5 rounded-lg border border-white/[0.04] bg-white/[0.01]"
                   >
-                    <div className="w-6 h-6 rounded-full bg-gradient-accent flex items-center justify-center flex-shrink-0 text-xs font-bold text-white">
+                    <span className="w-4 h-4 rounded bg-white/[0.06] flex items-center justify-center text-[10px] font-mono text-white/60 flex-shrink-0 mt-0.5">
                       {i + 1}
-                    </div>
-                    <p className="text-sm text-slate-300">{tip}</p>
-                  </motion.div>
+                    </span>
+                    <p className="text-xs text-white/60 leading-relaxed">{tip}</p>
+                  </div>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

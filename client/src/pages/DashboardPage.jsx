@@ -1,54 +1,12 @@
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Mic,
   BookOpen,
-  Code2,
   FileText,
   Map,
-  Flame,
-  TrendingUp,
-  Target,
-  Zap,
   ArrowRight,
-  Calendar,
 } from 'lucide-react';
-import StatCard from '../components/ui/StatCard';
-import ProgressBar from '../components/ui/ProgressBar';
-import PerformanceChart from '../components/PerformanceChart';
-import ActivityFeed from '../components/ActivityFeed';
 import { useAuth } from '../context/AuthContext';
-
-const quickActions = [
-  {
-    title: 'Start Interview',
-    description: 'Practice with AI interviewer',
-    icon: Mic,
-    color: 'from-[#d4684b] to-[#e88d72]',
-    link: '/interviews',
-  },
-  {
-    title: 'Documentation',
-    description: 'Explore documentation and core concepts',
-    icon: BookOpen,
-    color: 'from-[#d4684b] to-[#e88d72]',
-    link: '/coding',
-  },
-  {
-    title: 'Analyze Resume',
-    description: 'Get AI-powered feedback',
-    icon: FileText,
-    color: 'from-[#e88d72] to-[#d4684b]',
-    link: '/resume',
-  },
-  {
-    title: 'View Roadmap',
-    description: 'Follow your study plan',
-    icon: Map,
-    color: 'from-amber-600 to-amber-500',
-    link: '/profile',
-  },
-];
 
 export default function DashboardPage() {
   const { user, profile } = useAuth();
@@ -62,162 +20,113 @@ export default function DashboardPage() {
 
   const level = Math.max(1, Math.floor(xpPoints / 200));
   const xpInLevel = xpPoints % 200;
-  const xpToNext = 200 - xpInLevel;
+  const xpPercent = Math.round((xpInLevel / 200) * 100);
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="gradient-border p-6 sm:p-8 relative overflow-hidden"
-      >
-        <div className="bg-orb w-64 h-64 bg-[#d4684b] -top-20 -right-20 opacity-20" />
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-              Welcome back, {firstName}! 👋
-            </h1>
-            <p className="text-slate-400">
-              You're on a <span className="text-amber-400 font-medium">{currentStreak} day streak</span>. 
-              Keep it going — consistency is key!
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-center px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
-              <Flame className="w-5 h-5 text-amber-400 mx-auto mb-1" />
-              <p className="text-lg font-bold text-amber-400">{currentStreak}</p>
-              <p className="text-xs text-amber-400/70">Streak</p>
-            </div>
-            <div className="text-center px-4 py-2 rounded-xl bg-[#d4684b]/10 border border-[#d4684b]/20">
-              <Zap className="w-5 h-5 text-[#d4684b] mx-auto mb-1" />
-              <p className="text-lg font-bold text-[#d4684b]">{xpPoints.toLocaleString()}</p>
-              <p className="text-xs text-[#d4684b]/70">XP</p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+    <div className="max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="mb-10">
+        <h1 className="text-2xl font-semibold text-white tracking-tight">
+          Welcome back, {firstName}
+        </h1>
+        <p className="mt-1.5 text-sm text-white/35">
+          {currentStreak}-day streak · Level {level} · {xpInLevel} / 200 XP
+        </p>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          icon={Mic}
-          label="Interviews Taken"
-          value={String(interviewsTaken)}
-          iconColor="text-[#d4684b]"
-          iconBg="bg-[#d4684b]/10"
-        />
-        <StatCard
-          icon={Code2}
-          label="Problems Solved"
-          value={String(problemsSolved)}
-          iconColor="text-emerald-400"
-          iconBg="bg-emerald-500/10"
-        />
-        <StatCard
-          icon={Target}
-          label="Avg. Score"
-          value={`${avgScore}%`}
-          iconColor="text-[#e88d72]"
-          iconBg="bg-[#e88d72]/10"
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Level"
-          value={String(level)}
-          change={`${xpToNext} XP to next`}
-          changeType="positive"
-          iconColor="text-amber-400"
-          iconBg="bg-amber-500/10"
-        />
+        {/* Primary Actions */}
+        <div className="mt-6 flex items-center gap-3">
+          <Link
+            to="/interviews"
+            className="inline-flex items-center gap-2 bg-[#d4684b] hover:bg-[#c45f43] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Mic size={16} />
+            Start Interview
+          </Link>
+          <Link
+            to="/resume"
+            className="inline-flex items-center gap-2 bg-white/[0.04] hover:bg-white/[0.07] text-white/80 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors border border-white/[0.08]"
+          >
+            <FileText size={16} />
+            Analyze Resume
+          </Link>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10">
+        <Stat label="Interviews" value={String(interviewsTaken)} />
+        <Stat label="Problems Solved" value={String(problemsSolved)} />
+        <Stat label="Avg. Score" value={`${avgScore}%`} />
+        <Stat label="Level" value={String(level)} />
       </div>
 
       {/* XP Progress */}
-      <div className="glass p-5">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-medium text-slate-300">Level {level} Progress</span>
-          <span className="text-xs text-slate-500">{xpInLevel} / 200 XP</span>
+      <div className="mb-12">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-white/40">Level {level} Progress</span>
+          <span className="text-sm text-white/25">{xpInLevel} / 200 XP</span>
         </div>
-        <ProgressBar value={xpInLevel} max={200} showValue={false} size="md" />
+        <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
+          <div
+            className="h-full bg-[#d4684b] rounded-full transition-all duration-500"
+            style={{ width: `${xpPercent}%` }}
+          />
+        </div>
       </div>
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {quickActions.map((action, index) => (
-            <Link key={index} to={action.link}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="glass glass-hover p-5 group cursor-pointer h-full"
-              >
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
-                  <action.icon className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-sm font-semibold text-white mb-1">{action.title}</h3>
-                <p className="text-xs text-slate-500">{action.description}</p>
-                <ArrowRight className="w-4 h-4 text-slate-600 mt-3 group-hover:text-[#d4684b] group-hover:translate-x-1 transition-all" />
-              </motion.div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Performance Chart */}
-        <div className="glass p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Skill Radar</h2>
-          <PerformanceChart />
-        </div>
-
-        {/* Recent Activity */}
-        <div className="glass p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">Recent Activity</h2>
-            <button className="text-xs text-[#d4684b] hover:text-[#e88d72] transition-colors">
-              View All
-            </button>
-          </div>
-          <ActivityFeed />
-        </div>
-      </div>
-
-      {/* Upcoming Goals */}
-      <div className="glass p-6">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-white">Weekly Goals</h2>
-          <div className="flex items-center gap-1.5 text-xs text-slate-500">
-            <Calendar className="w-3.5 h-3.5" />
-            Resets in 3 days
-          </div>
-        </div>
-        <div className="space-y-4">
-          {[
-            { label: 'Complete 5 mock interviews', value: Math.min(interviewsTaken, 5), max: 5 },
-            { label: 'Solve 15 coding problems', value: Math.min(problemsSolved, 15), max: 15 },
-            { label: 'Practice 30 minutes daily', value: 0, max: 7 },
-          ].map((goal, i) => (
-            <div key={i}>
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-sm text-slate-300">{goal.label}</span>
-                <span className="text-xs text-slate-500">
-                  {goal.value}/{goal.max}
-                </span>
-              </div>
-              <ProgressBar
-                value={goal.value}
-                max={goal.max}
-                showValue={false}
-                size="sm"
-              />
-            </div>
-          ))}
+        <h2 className="text-sm font-medium text-white/40 mb-4">Quick Actions</h2>
+        <div className="grid sm:grid-cols-3 gap-4">
+          <ActionCard
+            icon={<BookOpen size={18} />}
+            title="Documentation"
+            description="Explore concepts & guides"
+            to="/coding"
+          />
+          <ActionCard
+            icon={<Map size={18} />}
+            title="View Roadmap"
+            description="Follow your study plan"
+            to="/profile"
+          />
+          <ActionCard
+            icon={<Mic size={18} />}
+            title="Mock Interviews"
+            description="Practice with AI interviewer"
+            to="/interviews"
+          />
         </div>
       </div>
     </div>
+  );
+}
+
+/* ---------- Small reusable pieces ---------- */
+
+function Stat({ label, value }) {
+  return (
+    <div>
+      <p className="text-sm text-white/30 mb-1">{label}</p>
+      <p className="text-2xl font-semibold text-white tracking-tight">{value}</p>
+    </div>
+  );
+}
+
+function ActionCard({ icon, title, description, to }) {
+  return (
+    <Link
+      to={to}
+      className="group text-left p-5 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1] transition-all block"
+    >
+      <div className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center text-white/50 mb-4 group-hover:bg-[#d4684b]/10 group-hover:text-[#d4684b] transition-colors">
+        {icon}
+      </div>
+      <h3 className="font-medium text-[15px] text-white mb-1">{title}</h3>
+      <p className="text-sm text-white/30">{description}</p>
+      <div className="mt-4 flex items-center gap-1 text-xs text-white/20 group-hover:text-[#d4684b] transition-colors">
+        Open <ArrowRight size={12} />
+      </div>
+    </Link>
   );
 }
