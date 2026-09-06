@@ -266,7 +266,7 @@ export const resetPasswordOTP = async (req, res, next) => {
     // Hash new password and update user
     const passwordHash = await hashPassword(newPassword);
     await query(
-      'UPDATE users SET password_hash = $1 WHERE email = $2',
+      'UPDATE users SET password_hash = $1, is_verified = TRUE WHERE email = $2',
       [passwordHash, email]
     );
 

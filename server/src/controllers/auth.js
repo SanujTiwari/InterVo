@@ -111,8 +111,11 @@ export const login = async (req, res, next) => {
       throw new AppError('Invalid email or password', 401);
     }
 
-    if (user.provider !== 'local') {
-      throw new AppError(`Please log in using your ${user.provider} account`, 400);
+    if (!user.password_hash) {
+      throw new AppError(
+        `This account was created with ${user.provider} and has no password set. Please log in with ${user.provider} or use "Forgot password" to set a password.`,
+        400
+      );
     }
 
     const isValidPassword = await comparePassword(password, user.password_hash);
