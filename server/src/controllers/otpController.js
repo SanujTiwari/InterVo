@@ -163,12 +163,7 @@ export const forgotPasswordOTP = async (req, res, next) => {
     const user = userRes.rows[0];
 
     if (!user) {
-      // Don't reveal whether the email exists — return success anyway
-      return ApiResponse.success(res, {
-        statusCode: 200,
-        message: 'If an account with this email exists, an OTP has been sent.',
-        data: { expiresInSeconds: 600 },
-      });
+      throw new AppError('No account found with this email address. Please sign up first.', 404);
     }
 
 
