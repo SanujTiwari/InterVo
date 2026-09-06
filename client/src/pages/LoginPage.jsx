@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import OTPModal from '../components/ui/OTPModal';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -9,6 +10,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // Forgot password OTP flow
+  const [showForgotOTP, setShowForgotOTP] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotDebugOtp, setForgotDebugOtp] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotSuccess, setForgotSuccess] = useState('');
 
   const handleGoogleCallback = async (response) => {
     setLoading(true);
@@ -68,6 +76,38 @@ export default function LoginPage() {
     }
   };
 
+  // Handle "Forgot?" click — send forgot-password OTP
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+
+    // Use the email in the form, or prompt to fill it in
+    const email = form.email.trim();
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setErrors({ email: 'Enter your email above, then click Forgot?' });
+      return;
+    }
+
+    setForgotLoading(true);
+    setForgotSuccess('');
+    try {
+      const { data } = await api.post('/auth/forgot-password-otp', { email });
+      setForgotEmail(email);
+      setForgotDebugOtp(data.data?.debugOtp || '');
+      setShowForgotOTP(true);
+    } catch (err) {
+      setErrors({ email: err.response?.data?.message || 'Failed to send reset code' });
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  // Handle successful password reset
+  const handleForgotVerified = (data) => {
+    setShowForgotOTP(false);
+    setForgotSuccess('Password reset successfully! You can now sign in.');
+    setForm({ email: forgotEmail, password: '' });
+  };
+
   return (
     <div>
       {/* Header */}
@@ -79,6 +119,18 @@ export default function LoginPage() {
           Sign in to your account to continue.
         </p>
       </div>
+
+      {/* Success message */}
+      {forgotSuccess && (
+        <div className="mb-6 px-4 py-3 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/20">
+          <p className="text-sm text-emerald-400/90 flex items-center gap-2">
+            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            {forgotSuccess}
+          </p>
+        </div>
+      )}
 
       {/* Google OAuth */}
       <div className="mb-6 min-h-[44px]">
@@ -128,12 +180,14 @@ export default function LoginPage() {
             >
               Password
             </label>
-            <a
-              href="#"
-              className="text-[12px] text-white/30 hover:text-white/50 transition-colors"
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              disabled={forgotLoading}
+              className="text-[12px] text-white/30 hover:text-white/50 transition-colors disabled:opacity-50"
             >
-              Forgot?
-            </a>
+              {forgotLoading ? 'Sending…' : 'Forgot?'}
+            </button>
           </div>
           <input
             id="login-password"
@@ -191,6 +245,16 @@ export default function LoginPage() {
           </svg>
         </Link>
       </p>
+
+      {/* Forgot Password OTP Modal */}
+      <OTPModal
+        isOpen={showForgotOTP}
+        onClose={() => setShowForgotOTP(false)}
+        email={forgotEmail}
+        type="forgot_password"
+        onVerified={handleForgotVerified}
+        debugOtp={forgotDebugOtp}
+      />
     </div>
   );
 }
