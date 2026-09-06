@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import OTPModal from '../components/ui/OTPModal';
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -15,6 +16,11 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // OTP modal state
+  const [showOTP, setShowOTP] = useState(false);
+  const [otpEmail, setOtpEmail] = useState('');
+  const [debugOtp, setDebugOtp] = useState('');
 
   const handleGoogleCallback = async (response) => {
     setLoading(true);
@@ -76,13 +82,30 @@ export default function SignupPage() {
         password: form.password,
         full_name: form.fullName,
       });
-      login(data.data.user, data.data.token, data.data.refreshToken);
-      navigate('/dashboard');
+
+      // Signup now requires OTP verification
+      if (data.data?.requiresVerification) {
+        setOtpEmail(form.email);
+        setDebugOtp(data.data.debugOtp || '');
+        setShowOTP(true);
+      } else {
+        // Fallback for unexpected direct login
+        login(data.data.user, data.data.token, data.data.refreshToken);
+        navigate('/dashboard');
+      }
     } catch (err) {
       const errMsg = err.response?.data?.message || 'Something went wrong. Try again.';
       setErrors({ email: errMsg });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle successful OTP verification
+  const handleOTPVerified = (data) => {
+    if (data.user && data.token) {
+      login(data.user, data.token, data.refreshToken);
+      navigate('/dashboard');
     }
   };
 
@@ -275,6 +298,16 @@ export default function SignupPage() {
           </svg>
         </Link>
       </p>
+
+      {/* OTP Verification Modal */}
+      <OTPModal
+        isOpen={showOTP}
+        onClose={() => setShowOTP(false)}
+        email={otpEmail}
+        type="signup"
+        onVerified={handleOTPVerified}
+        debugOtp={debugOtp}
+      />
     </div>
   );
 }

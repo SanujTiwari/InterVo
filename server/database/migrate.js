@@ -22,15 +22,25 @@ const runMigration = async () => {
 
   try {
     await client.connect();
-    console.log('✅ Connected to database. Reading schema file...');
+    console.log('✅ Connected to database.');
 
-    const schemaPath = path.join(__dirname, 'migrations', '001_initial_schema.sql');
-    const sql = fs.readFileSync(schemaPath, 'utf8');
+    // Read all .sql migration files and sort them by filename
+    const migrationsDir = path.join(__dirname, 'migrations');
+    const files = fs.readdirSync(migrationsDir)
+      .filter(f => f.endsWith('.sql'))
+      .sort();
 
-    console.log('⏳ Running migration script...');
-    // Execute SQL script
-    await client.query(sql);
-    console.log('🎉 Migration completed successfully!');
+    console.log(`📂 Found ${files.length} migration file(s): ${files.join(', ')}`);
+
+    for (const file of files) {
+      const filePath = path.join(migrationsDir, file);
+      const sql = fs.readFileSync(filePath, 'utf8');
+      console.log(`⏳ Running migration: ${file}...`);
+      await client.query(sql);
+      console.log(`  ✅ ${file} — done`);
+    }
+
+    console.log('🎉 All migrations completed successfully!');
   } catch (error) {
     console.error('❌ Migration failed:', error);
     process.exit(1);

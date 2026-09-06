@@ -3,6 +3,7 @@ import { hashPassword, comparePassword, generateAccessToken, generateRefreshToke
 import { ApiResponse } from '../utils/apiResponse.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { OAuth2Client } from 'google-auth-library';
+import { generateOTP, sendOTPEmail } from '../utils/otpHelper.js';
 import env from '../config/env.js';
 
 // Load Google Client ID from environment variables
@@ -11,6 +12,7 @@ const googleClient = new OAuth2Client(googleClientId);
 
 /**
  * Handle local user signup.
+ * Creates user but requires OTP verification before login.
  */
 export const signup = async (req, res, next) => {
   const { email, password, full_name, role } = req.body;
@@ -28,7 +30,7 @@ export const signup = async (req, res, next) => {
     // Hash the password
     const passwordHash = await hashPassword(password);
 
-    // Insert new user
+    // Insert new user (is_verified defaults to FALSE)
     const userRes = await dbClient.query(
       `INSERT INTO users (email, password_hash, full_name, role) 
        VALUES ($1, $2, $3, $4) 
@@ -43,31 +45,41 @@ export const signup = async (req, res, next) => {
       [user.id]
     );
 
-    // Generate JWT access & refresh tokens
-    const tokenPayload = { id: user.id, email: user.email, role: user.role };
-    const accessToken = generateAccessToken(tokenPayload);
-    const refreshToken = generateRefreshToken(tokenPayload);
-
-    // Store refresh token session in database
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-    const ipAddress = req.ip || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
+    // Invalidate any previous OTPs for this email
     await dbClient.query(
-      `INSERT INTO sessions (user_id, refresh_token, expires_at, ip_address, user_agent)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [user.id, refreshToken, expiresAt, ipAddress, userAgent]
+      `UPDATE otp_codes SET is_used = TRUE 
+       WHERE email = $1 AND type = 'signup' AND is_used = FALSE AND expires_at > NOW()`,
+      [email]
+    );
+
+    // Generate OTP
+    const otp = generateOTP();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await dbClient.query(
+      `INSERT INTO otp_codes (email, otp_code, type, expires_at)
+       VALUES ($1, $2, 'signup', $3)`,
+      [email, otp, expiresAt]
     );
 
     await dbClient.query('COMMIT');
 
+    // Send OTP email (after commit so user is persisted)
+    const emailResult = await sendOTPEmail(email, otp, 'signup');
+
+    const responseData = {
+      user,
+      requiresVerification: true,
+      expiresInSeconds: 600,
+    };
+
+    if (env.isDev && emailResult.debugOtp) {
+      responseData.debugOtp = emailResult.debugOtp;
+    }
+
     return ApiResponse.success(res, {
       statusCode: 201,
-      message: 'User registered successfully',
-      data: {
-        user,
-        token: accessToken,
-        refreshToken
-      }
+      message: 'Account created. Please verify your email with the OTP sent.',
+      data: responseData,
     });
   } catch (err) {
     await dbClient.query('ROLLBACK');
