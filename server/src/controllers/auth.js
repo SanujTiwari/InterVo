@@ -45,6 +45,15 @@ export const signup = async (req, res, next) => {
       [user.id]
     );
 
+    // Find previous active OTP for this email to guarantee uniqueness
+    const prevRes = await dbClient.query(
+      `SELECT otp_code FROM otp_codes 
+       WHERE email = $1 AND type = 'signup' AND is_used = FALSE AND expires_at > NOW()
+       ORDER BY created_at DESC LIMIT 1`,
+      [email]
+    );
+    const previousOtp = prevRes.rows[0]?.otp_code;
+
     // Invalidate any previous OTPs for this email
     await dbClient.query(
       `UPDATE otp_codes SET is_used = TRUE 
@@ -52,8 +61,8 @@ export const signup = async (req, res, next) => {
       [email]
     );
 
-    // Generate OTP
-    const otp = generateOTP();
+    // Generate OTP guaranteed to differ from previousOtp
+    const otp = generateOTP(previousOtp);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await dbClient.query(
       `INSERT INTO otp_codes (email, otp_code, type, expires_at)

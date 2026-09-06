@@ -13,6 +13,15 @@ export const sendOTP = async (req, res, next) => {
   const { email, type = 'signup' } = req.body;
 
   try {
+    // Find previous active OTP for this email & type to guarantee uniqueness
+    const prevRes = await query(
+      `SELECT otp_code FROM otp_codes 
+       WHERE email = $1 AND type = $2 AND is_used = FALSE AND expires_at > NOW()
+       ORDER BY created_at DESC LIMIT 1`,
+      [email, type]
+    );
+    const previousOtp = prevRes.rows[0]?.otp_code;
+
     // Invalidate all previous active OTPs for this email & type
     await query(
       `UPDATE otp_codes SET is_used = TRUE 
@@ -20,8 +29,8 @@ export const sendOTP = async (req, res, next) => {
       [email, type]
     );
 
-    // Generate a fresh 6-digit OTP
-    const otp = generateOTP();
+    // Generate a fresh 6-digit OTP guaranteed to differ from previousOtp
+    const otp = generateOTP(previousOtp);
 
     // Store in database with 10-minute expiry
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
@@ -162,12 +171,15 @@ export const forgotPasswordOTP = async (req, res, next) => {
       });
     }
 
-    if (user.provider !== 'local') {
-      throw new AppError(
-        `This account uses ${user.provider} login. Password reset is not available.`,
-        400
-      );
-    }
+
+    // Find previous active OTP to guarantee uniqueness
+    const prevRes = await query(
+      `SELECT otp_code FROM otp_codes 
+       WHERE email = $1 AND type = 'forgot_password' AND is_used = FALSE AND expires_at > NOW()
+       ORDER BY created_at DESC LIMIT 1`,
+      [email]
+    );
+    const previousOtp = prevRes.rows[0]?.otp_code;
 
     // Invalidate previous OTPs
     await query(
@@ -177,7 +189,7 @@ export const forgotPasswordOTP = async (req, res, next) => {
     );
 
     // Generate and store OTP
-    const otp = generateOTP();
+    const otp = generateOTP(previousOtp);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await query(
       `INSERT INTO otp_codes (email, otp_code, type, expires_at)

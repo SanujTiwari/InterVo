@@ -3,12 +3,15 @@ import env from '../config/env.js';
 
 /**
  * Generate a cryptographically random 6-digit OTP.
+ * @param {string} [excludeOtp] - Optional previous OTP to exclude so consecutive codes are guaranteed distinct
  * @returns {string} 6-digit numeric string
  */
-export const generateOTP = () => {
-  // Generate a random number between 100000 and 999999
-  const otp = crypto.randomInt(100000, 999999);
-  return otp.toString();
+export const generateOTP = (excludeOtp) => {
+  let otp;
+  do {
+    otp = crypto.randomInt(100000, 999999).toString();
+  } while (excludeOtp && otp === excludeOtp);
+  return otp;
 };
 
 /**
