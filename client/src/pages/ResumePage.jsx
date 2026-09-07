@@ -12,6 +12,7 @@ import {
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
+import { PageLoader } from '../components/ui/Loader';
 
 const mockAnalysis = {
   overallScore: 82,
@@ -156,15 +157,20 @@ export default function ResumePage() {
               )}
             </div>
 
-            {uploadedFile && (
-              <Button
-                variant="primary"
-                size="md"
-                loading={isAnalyzing}
-                onClick={analyzeResume}
-              >
-                {isAnalyzing ? 'Analyzing Resume...' : 'Analyze Resume'}
-              </Button>
+            {isAnalyzing ? (
+              <div className="p-8 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+                <PageLoader message="AI is reading and evaluating your resume..." variant="coral" />
+              </div>
+            ) : (
+              uploadedFile && (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={analyzeResume}
+                >
+                  Analyze Resume
+                </Button>
+              )
             )}
 
             {/* Past Analyses */}

@@ -1,5 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { useAuth } from './context/AuthContext'
+import { PageLoader } from './components/ui/Loader'
 
 // Layouts
 import LandingLayout from './layouts/LandingLayout'
@@ -17,6 +19,12 @@ import ResumePage from './pages/ResumePage'
 import ProfilePage from './pages/ProfilePage'
 
 function App() {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <PageLoader fullScreen message="Loading Intervo..." />;
+  }
+
   return (
     <AnimatePresence mode="wait">
       <Routes>

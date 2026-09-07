@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import { PageLoader } from '../components/ui/Loader';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -61,12 +62,16 @@ export default function MockInterviewPage() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState('Medium');
   const [isInterviewing, setIsInterviewing] = useState(false);
+  const [isPreparing, setIsPreparing] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [timer, setTimer] = useState(0);
 
-  const startInterview = () => {
+  const startInterview = async () => {
     if (!selectedType) return;
+    setIsPreparing(true);
+    await new Promise((resolve) => setTimeout(resolve, 1600));
+    setIsPreparing(false);
     setIsInterviewing(true);
     setCurrentQuestion(0);
     setTimer(0);
@@ -118,7 +123,11 @@ export default function MockInterviewPage() {
       </div>
 
       <AnimatePresence mode="wait">
-        {!isInterviewing ? (
+        {isPreparing ? (
+          <div key="preparing" className="p-12 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <PageLoader message="AI Interviewer is preparing your dynamic questions..." />
+          </div>
+        ) : !isInterviewing ? (
           <div key="setup" className="space-y-8">
             {/* Interview Type Selection */}
             <div>
